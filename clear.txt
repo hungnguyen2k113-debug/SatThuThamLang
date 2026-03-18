@@ -1,193 +1,216 @@
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
+-- ================= UI PREMIUM ADD =================
 
-local gui = Instance.new("ScreenGui", game.CoreGui)
+local premium = Instance.new("Frame", gui)
+premium.Size = UDim2.new(0,500,0,350)
+premium.Position = UDim2.new(0.5,-250,0.5,-175)
+premium.BackgroundColor3 = Color3.fromRGB(40,40,40)
+premium.Visible = false
+premium.BorderSizePixel = 3
+Instance.new("UICorner", premium)
 
--- LOGO
-local logo = Instance.new("TextButton", gui)
-logo.Size = UDim2.new(0,60,0,60)
-logo.Position = UDim2.new(0,20,0,200)
-logo.Text = "🐿️"
-logo.TextSize = 30
-logo.Font = Enum.Font.GothamBold
-logo.BackgroundColor3 = Color3.fromRGB(255,255,255)
-logo.BackgroundTransparency = 0.4
-logo.AutoButtonColor = false
-Instance.new("UICorner", logo).CornerRadius = UDim.new(1,0)
-
--- ZOOM + TOGGLE MAIN
-local zoomed = false
-
--- DRAG
-local UIS = game:GetService("UserInputService")
-local dragging, dragStart, startPos
-
-logo.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = true
-		dragStart = input.Position
-		startPos = logo.Position
+-- 7 COLOR BORDER
+task.spawn(function()
+	while true do
+		for i=0,1,0.01 do
+			premium.BorderColor3 = Color3.fromHSV(i,1,1)
+			task.wait(0.02)
+		end
 	end
 end)
 
-logo.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = false
-	end
+-- TOP BAR
+local top = Instance.new("Frame", premium)
+top.Size = UDim2.new(1,0,0.2,0)
+top.BackgroundTransparency = 1
+
+local title = Instance.new("TextLabel", top)
+title.Text = "NghungHub by hynixyeuem [Premium]"
+title.Size = UDim2.new(0.7,0,1,0)
+title.TextColor3 = Color3.fromRGB(255,255,255)
+title.BackgroundTransparency = 1
+title.TextScaled = true
+
+-- BUTTONS
+local minimize = Instance.new("TextButton", top)
+minimize.Text = "-"
+minimize.Size = UDim2.new(0,40,0,40)
+minimize.Position = UDim2.new(1,-120,0,5)
+
+local expand = Instance.new("TextButton", top)
+expand.Text = "□"
+expand.Size = UDim2.new(0,40,0,40)
+expand.Position = UDim2.new(1,-80,0,5)
+
+local close = Instance.new("TextButton", top)
+close.Text = "X"
+close.Size = UDim2.new(0,40,0,40)
+close.Position = UDim2.new(1,-40,0,5)
+
+for _,b in pairs({minimize,expand,close}) do
+	b.BackgroundColor3 = Color3.fromRGB(70,70,70)
+	b.TextColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", b)
+end
+
+-- SIDEBAR
+local sidebar = Instance.new("Frame", premium)
+sidebar.Size = UDim2.new(0.25,0,0.8,0)
+sidebar.Position = UDim2.new(0,0,0.2,0)
+sidebar.BackgroundTransparency = 1
+
+local infoBtn = Instance.new("TextButton", sidebar)
+infoBtn.Text = "Info"
+infoBtn.Size = UDim2.new(1,0,0,50)
+
+local farmBtn = Instance.new("TextButton", sidebar)
+farmBtn.Text = "Farming"
+farmBtn.Position = UDim2.new(0,0,0,60)
+farmBtn.Size = UDim2.new(1,0,0,50)
+
+for _,b in pairs({infoBtn,farmBtn}) do
+	b.BackgroundColor3 = Color3.fromRGB(60,60,60)
+	b.TextColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", b)
+end
+
+-- CONTENT
+local content = Instance.new("Frame", premium)
+content.Size = UDim2.new(0.75,0,0.8,0)
+content.Position = UDim2.new(0.25,0,0.2,0)
+content.BackgroundTransparency = 1
+
+-- INFO PANEL
+local infoPanel = Instance.new("Frame", content)
+infoPanel.Size = UDim2.new(1,0,1,0)
+infoPanel.BackgroundTransparency = 1
+
+local avatar2 = avatar:Clone()
+avatar2.Parent = infoPanel
+avatar2.Size = UDim2.new(0,80,0,80)
+
+local infoText = Instance.new("TextLabel", infoPanel)
+infoText.Position = UDim2.new(0,0,0,90)
+infoText.Size = UDim2.new(1,0,1,-90)
+infoText.Text = "UID: "..LocalPlayer.UserId.."\nAsia/HoChiMinh\nTikTok: @nghbt255\nZalo: 0394310186"
+infoText.TextColor3 = Color3.fromRGB(255,255,255)
+infoText.BackgroundTransparency = 1
+infoText.TextScaled = true
+
+-- FARM PANEL
+local farmPanel = Instance.new("Frame", content)
+farmPanel.Size = UDim2.new(1,0,1,0)
+farmPanel.Visible = false
+farmPanel.BackgroundTransparency = 1
+
+local killBtn = Instance.new("TextButton", farmPanel)
+killBtn.Text = "Kill Player"
+killBtn.Size = UDim2.new(1,0,0,50)
+
+local hitboxBtn = Instance.new("TextButton", farmPanel)
+hitboxBtn.Text = "Hitbox"
+hitboxBtn.Position = UDim2.new(0,0,0,60)
+hitboxBtn.Size = UDim2.new(1,0,0,50)
+
+local notifyBtn = Instance.new("TextButton", farmPanel)
+notifyBtn.Text = "Toggle Notify"
+notifyBtn.Position = UDim2.new(0,0,0,120)
+notifyBtn.Size = UDim2.new(1,0,0,50)
+
+for _,b in pairs({killBtn,hitboxBtn,notifyBtn}) do
+	b.BackgroundColor3 = Color3.fromRGB(80,80,80)
+	b.TextColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", b)
+end
+
+-- BUTTON LOGIC
+infoBtn.MouseButton1Click:Connect(function()
+	infoPanel.Visible = true
+	farmPanel.Visible = false
 end)
 
-UIS.InputChanged:Connect(function(input)
-	if dragging then
-		local delta = input.Position - dragStart
-		logo.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
-		)
-	end
+farmBtn.MouseButton1Click:Connect(function()
+	infoPanel.Visible = false
+	farmPanel.Visible = true
 end)
 
--- MAIN FRAME (GIỮ LẠI)
-local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0,320,0,300)
-frame.Position = UDim2.new(0.5,-160,0.5,-150)
-frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
-frame.Visible = false
-frame.BorderSizePixel = 2
+killBtn.MouseButton1Click:Connect(function()
+	auraEnabled = true
+	notify("Kill Player Enabled")
+end)
 
-Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
+hitboxBtn.MouseButton1Click:Connect(function()
+	for _,p in pairs(Players:GetPlayers()) do
+		if p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+			p.Character.HumanoidRootPart.Size = Vector3.new(250,250,250)
+		end
+	end
+	notify("Hitbox Expanded")
+end)
 
--- FIX CLICK LOGO
-logo.MouseButton1Click:Connect(function()
-	zoomed = not zoomed
-	
-	if zoomed then
-		logo.TextSize = 50
-		logo.BackgroundTransparency = 0
+notifyBtn.MouseButton1Click:Connect(function()
+	notifyEnabled = not notifyEnabled
+	notify("Notify: "..tostring(notifyEnabled))
+end)
+
+-- MINIMIZE
+minimize.MouseButton1Click:Connect(function()
+	premium.Visible = false
+end)
+
+-- EXPAND
+local big = false
+expand.MouseButton1Click:Connect(function()
+	big = not big
+	if big then
+		premium.Size = UDim2.new(0,650,0,450)
 	else
-		logo.TextSize = 30
-		logo.BackgroundTransparency = 0.4
+		premium.Size = UDim2.new(0,500,0,350)
 	end
-	
-	frame.Visible = not frame.Visible
 end)
 
--- ====== GIỮ NGUYÊN LOGIC ======
+-- CLOSE CONFIRM
+local confirm = Instance.new("Frame", gui)
+confirm.Size = UDim2.new(0,300,0,150)
+confirm.Position = UDim2.new(0.5,-150,0.5,-75)
+confirm.BackgroundColor3 = Color3.fromRGB(50,50,50)
+confirm.Visible = false
+Instance.new("UICorner", confirm)
 
-local notifyEnabled = true
-local auraEnabled = false
+local txt = Instance.new("TextLabel", confirm)
+txt.Size = UDim2.new(1,0,0.6,0)
+txt.Text = "Script đang hoạt động\nBạn muốn dừng?"
+txt.TextColor3 = Color3.new(1,1,1)
+txt.BackgroundTransparency = 1
 
--- NOTIFY
-local notifyFrame = Instance.new("Frame", gui)
-notifyFrame.Size = UDim2.new(0,260,0,60)
-notifyFrame.Position = UDim2.new(1,-270,1,-80)
-notifyFrame.BackgroundColor3 = Color3.fromRGB(25,25,25)
-notifyFrame.Visible = false
-notifyFrame.BorderSizePixel = 2
-Instance.new("UICorner", notifyFrame)
+local yes = Instance.new("TextButton", confirm)
+yes.Text = "Yes"
+yes.Size = UDim2.new(0.5,0,0.4,0)
+yes.Position = UDim2.new(0,0,0.6,0)
 
-local avatar = Instance.new("ImageLabel", notifyFrame)
-avatar.Size = UDim2.new(0.4,0,1,0)
-avatar.BackgroundTransparency = 1
-avatar.Image = "rbxthumb://type=AvatarHeadShot&id="..LocalPlayer.UserId.."&w=150&h=150"
+local no = Instance.new("TextButton", confirm)
+no.Text = "No"
+no.Size = UDim2.new(0.5,0,0.4,0)
+no.Position = UDim2.new(0.5,0,0.6,0)
 
-local notifyText = Instance.new("TextLabel", notifyFrame)
-notifyText.Size = UDim2.new(0.6,0,1,0)
-notifyText.Position = UDim2.new(0.4,0,0,0)
-notifyText.BackgroundTransparency = 1
-notifyText.TextColor3 = Color3.fromRGB(255,255,255)
-notifyText.TextScaled = true
-
-function notify(msg)
-	if not notifyEnabled then return end
-	notifyFrame.Visible = true
-	notifyText.Text = msg
-	
-	task.delay(5,function()
-		notifyFrame.Visible = false
-	end)
+for _,b in pairs({yes,no}) do
+	b.BackgroundColor3 = Color3.fromRGB(80,80,80)
+	b.TextColor3 = Color3.new(1,1,1)
 end
 
-task.spawn(function()
-	task.wait(1)
-	notify("👋 Xin chào "..LocalPlayer.Name)
+close.MouseButton1Click:Connect(function()
+	confirm.Visible = true
 end)
 
--- ESP
-local function applyESP(player)
-	if player ~= LocalPlayer then
-		player.CharacterAdded:Connect(function(char)
-			task.wait(1)
-			if not char:FindFirstChild("ESP_HL") then
-				local hl = Instance.new("Highlight")
-				hl.Name = "ESP_HL"
-				hl.FillColor = Color3.fromRGB(255,0,0)
-				hl.OutlineColor = Color3.fromRGB(0,255,255)
-				hl.Parent = char
-			end
-		end)
-	end
-end
-
-for _,p in pairs(Players:GetPlayers()) do
-	applyESP(p)
-end
-
-Players.PlayerAdded:Connect(applyESP)
-
--- AURA
-local auraRadius = 9999
-
-task.spawn(function()
-	while true do
-		task.wait(0.05)
-		if auraEnabled then
-			local char = LocalPlayer.Character
-			if char and char:FindFirstChild("HumanoidRootPart") then
-				
-				for _,p in pairs(Players:GetPlayers()) do
-					if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-						
-						local target = p.Character.HumanoidRootPart
-						local humanoid = p.Character:FindFirstChildOfClass("Humanoid")
-						
-						if humanoid and humanoid.Health > 0 then
-							target.Size = Vector3.new(250,250,250)
-							target.Transparency = 1
-							
-							if (target.Position - char.HumanoidRootPart.Position).Magnitude <= auraRadius then
-								humanoid:TakeDamage(500)
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+yes.MouseButton1Click:Connect(function()
+	gui:Destroy()
 end)
 
--- CLICK KILL MAP
-game:GetService("UserInputService").InputBegan:Connect(function(input, gp)
-	if gp then return end
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-		if auraEnabled then
-			for _,p in pairs(Players:GetPlayers()) do
-				if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("Humanoid") then
-					p.Character.Humanoid.Health = 0
-				end
-			end
-			notify("Aura Burst Map")
-		end
-	end
+no.MouseButton1Click:Connect(function()
+	confirm.Visible = false
 end)
 
--- RAINBOW BORDER (MAIN MỚI)
-task.spawn(function()
-	while true do
-		for i=0,1,0.02 do
-			frame.BorderColor3 = Color3.fromHSV(i,1,1)
-			task.wait(0.03)
-		end
-	end
+-- OPEN MAIN
+logo.MouseButton1Click:Connect(function()
+	premium.Visible = not premium.Visible
+	frame.Visible = false
 end)
