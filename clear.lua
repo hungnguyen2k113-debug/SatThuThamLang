@@ -124,6 +124,7 @@ side.Size = UDim2.new(0,140,1,-40)
 side.Position = UDim2.new(0,0,0,40)
 side.BackgroundTransparency = 1
 
+-- ====== TAB BUTTONS (GIỮ NGUYÊN) ======
 local infoBtn = Instance.new("TextButton", side)
 infoBtn.Size = UDim2.new(1,0,0,50)
 infoBtn.Text = "Info"
@@ -137,16 +138,49 @@ farmBtn.Text = "Farming"
 farmBtn.TextColor3 = Color3.new(1,1,1)
 farmBtn.BackgroundTransparency = 1
 
+-- ====== CONTENT CŨ (GIỮ NGUYÊN NHƯNG ẨN) ======
 local content = Instance.new("Frame", frame)
 content.Position = UDim2.new(0,150,0,40) 
 content.Size = UDim2.new(1,-160,1,-40) 
 content.BackgroundTransparency = 1
+content.Visible = false -- 🔥 ẨN ĐI
 
-local infoLabel = Instance.new("TextLabel", content)
-infoLabel.Size = UDim2.new(1,0,0.5,0)
+-- ====== TẠO 2 PAGE RIÊNG ======
+local infoPage = Instance.new("Frame", frame)
+infoPage.Position = content.Position
+infoPage.Size = content.Size
+infoPage.BackgroundTransparency = 1
+
+local farmPage = Instance.new("Frame", frame)
+farmPage.Position = content.Position
+farmPage.Size = content.Size
+farmPage.BackgroundTransparency = 1
+farmPage.Visible = false
+
+-- ====== INFO PAGE CHIA 2/5 + 3/5 ======
+
+-- Avatar (trái)
+local avatarBox = Instance.new("Frame", infoPage)
+avatarBox.Size = UDim2.new(0.4,0,1,0)
+avatarBox.BackgroundTransparency = 1
+
+local avatarImg = Instance.new("ImageLabel", avatarBox)
+avatarImg.Size = UDim2.new(0.8,0,0.5,0)
+avatarImg.Position = UDim2.new(0.1,0,0.1,0)
+avatarImg.BackgroundTransparency = 1
+avatarImg.Image = avatar.Image
+
+Instance.new("UICorner", avatarImg)
+
+-- Info text (phải)
+local infoLabel = Instance.new("TextLabel", infoPage)
+infoLabel.Size = UDim2.new(0.6,0,1,0)
+infoLabel.Position = UDim2.new(0.4,0,0,0)
 infoLabel.TextColor3 = Color3.new(1,1,1)
 infoLabel.BackgroundTransparency = 1
 infoLabel.TextScaled = true
+infoLabel.TextXAlignment = Enum.TextXAlignment.Left
+infoLabel.TextYAlignment = Enum.TextYAlignment.Top
 
 infoLabel.Text =
 "👤 USER INFO\n"..
@@ -157,8 +191,9 @@ infoLabel.Text =
 "TikTok: @nghbt255\n"..
 "Zalo: 0394310186"
 
+-- ====== FIX TOGGLE SANG FARM PAGE ======
 local function createToggle(name, posY)
-	local holder = Instance.new("Frame", content)
+	local holder = Instance.new("Frame", farmPage) -- 🔥 CHUYỂN SANG FARM
 	holder.Size = UDim2.new(1,0,0,40)
 	holder.Position = UDim2.new(0,0,posY,0)
 	holder.BackgroundTransparency = 1
@@ -196,9 +231,22 @@ local function createToggle(name, posY)
 	end)
 end
 
-createToggle("Bật thông báo",0.55)
-createToggle("Kill Aura",0.7)
-createToggle("Auto Farm",0.85)
+createToggle("Bật thông báo",0.1)
+createToggle("Kill Aura",0.3)
+createToggle("Auto Farm",0.5)
+
+-- ====== CHUYỂN TAB ======
+infoBtn.MouseButton1Click:Connect(function()
+	infoPage.Visible = true
+	farmPage.Visible = false
+end)
+
+farmBtn.MouseButton1Click:Connect(function()
+	infoPage.Visible = false
+	farmPage.Visible = true
+end)
+
+-- ====== PHẦN DƯỚI GIỮ NGUYÊN 100% ======
 
 local notifications = {}
 
