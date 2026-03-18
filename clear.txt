@@ -1,216 +1,239 @@
--- ================= UI PREMIUM ADD =================
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local UIS = game:GetService("UserInputService")
 
-local premium = Instance.new("Frame", gui)
-premium.Size = UDim2.new(0,500,0,350)
-premium.Position = UDim2.new(0.5,-250,0.5,-175)
-premium.BackgroundColor3 = Color3.fromRGB(40,40,40)
-premium.Visible = false
-premium.BorderSizePixel = 3
-Instance.new("UICorner", premium)
+local gui = Instance.new("ScreenGui", game.CoreGui)
 
--- 7 COLOR BORDER
+-- ================= LOGO AVATAR =================
+local logo = Instance.new("TextButton", gui)
+logo.Size = UDim2.new(0,60,0,60)
+logo.Position = UDim2.new(0,20,0,200)
+logo.Text = "🐿️"
+logo.TextSize = 30
+logo.Font = Enum.Font.GothamBold
+logo.BackgroundColor3 = Color3.fromRGB(120,120,120)
+logo.BackgroundTransparency = 0.3
+logo.AutoButtonColor = false
+Instance.new("UICorner", logo).CornerRadius = UDim.new(1,0)
+
+-- DRAG LOGO
+local dragging, dragStart, startPos
+logo.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = logo.Position
+	end
+end)
+
+logo.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if dragging then
+		local delta = input.Position - dragStart
+		logo.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
+-- ================= MAIN =================
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0,420,0,260)
+frame.Position = UDim2.new(0.5,-210,0.5,-130)
+frame.BackgroundColor3 = Color3.fromRGB(90,90,90)
+frame.Visible = false
+frame.Active = true
+frame.Draggable = true
+
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
+
+-- RAINBOW BORDER
 task.spawn(function()
 	while true do
-		for i=0,1,0.01 do
-			premium.BorderColor3 = Color3.fromHSV(i,1,1)
-			task.wait(0.02)
+		for i=0,1,0.02 do
+			frame.BorderColor3 = Color3.fromHSV(i,1,1)
+			task.wait(0.03)
 		end
 	end
 end)
 
--- TOP BAR
-local top = Instance.new("Frame", premium)
-top.Size = UDim2.new(1,0,0.2,0)
+-- ================= TOP BAR =================
+local top = Instance.new("TextLabel", frame)
+top.Size = UDim2.new(1,0,0,40)
 top.BackgroundTransparency = 1
+top.Text = "NghungHub by hynixyeuem [Premium]"
+top.TextColor3 = Color3.fromRGB(255,255,255)
+top.Font = Enum.Font.GothamBold
+top.TextScaled = true
 
-local title = Instance.new("TextLabel", top)
-title.Text = "NghungHub by hynixyeuem [Premium]"
-title.Size = UDim2.new(0.7,0,1,0)
-title.TextColor3 = Color3.fromRGB(255,255,255)
-title.BackgroundTransparency = 1
-title.TextScaled = true
+-- BUTTONS TOP
+local closeTab = Instance.new("TextButton", frame)
+closeTab.Size = UDim2.new(0,40,0,40)
+closeTab.Position = UDim2.new(1,-40,0,0)
+closeTab.Text = "-"
+closeTab.BackgroundTransparency = 1
+closeTab.TextColor3 = Color3.new(1,1,1)
 
--- BUTTONS
-local minimize = Instance.new("TextButton", top)
-minimize.Text = "-"
-minimize.Size = UDim2.new(0,40,0,40)
-minimize.Position = UDim2.new(1,-120,0,5)
+local zoomBtn = Instance.new("TextButton", frame)
+zoomBtn.Size = UDim2.new(0,40,0,40)
+zoomBtn.Position = UDim2.new(1,-80,0,0)
+zoomBtn.Text = "⬜"
+zoomBtn.BackgroundTransparency = 1
+zoomBtn.TextColor3 = Color3.new(1,1,1)
 
-local expand = Instance.new("TextButton", top)
-expand.Text = "□"
-expand.Size = UDim2.new(0,40,0,40)
-expand.Position = UDim2.new(1,-80,0,5)
+local exitBtn = Instance.new("TextButton", frame)
+exitBtn.Size = UDim2.new(0,40,0,40)
+exitBtn.Position = UDim2.new(1,-120,0,0)
+exitBtn.Text = "X"
+exitBtn.BackgroundTransparency = 1
+exitBtn.TextColor3 = Color3.new(1,1,1)
 
-local close = Instance.new("TextButton", top)
-close.Text = "X"
-close.Size = UDim2.new(0,40,0,40)
-close.Position = UDim2.new(1,-40,0,5)
+-- ================= SIDEBAR =================
+local side = Instance.new("Frame", frame)
+side.Size = UDim2.new(0,120,1,-40)
+side.Position = UDim2.new(0,0,0,40)
+side.BackgroundTransparency = 1
 
-for _,b in pairs({minimize,expand,close}) do
-	b.BackgroundColor3 = Color3.fromRGB(70,70,70)
-	b.TextColor3 = Color3.fromRGB(255,255,255)
-	Instance.new("UICorner", b)
-end
-
--- SIDEBAR
-local sidebar = Instance.new("Frame", premium)
-sidebar.Size = UDim2.new(0.25,0,0.8,0)
-sidebar.Position = UDim2.new(0,0,0.2,0)
-sidebar.BackgroundTransparency = 1
-
-local infoBtn = Instance.new("TextButton", sidebar)
-infoBtn.Text = "Info"
+local infoBtn = Instance.new("TextButton", side)
 infoBtn.Size = UDim2.new(1,0,0,50)
+infoBtn.Text = "Info"
+infoBtn.TextColor3 = Color3.new(1,1,1)
+infoBtn.BackgroundTransparency = 1
 
-local farmBtn = Instance.new("TextButton", sidebar)
-farmBtn.Text = "Farming"
+local farmBtn = Instance.new("TextButton", side)
 farmBtn.Position = UDim2.new(0,0,0,60)
 farmBtn.Size = UDim2.new(1,0,0,50)
+farmBtn.Text = "Farming"
+farmBtn.TextColor3 = Color3.new(1,1,1)
+farmBtn.BackgroundTransparency = 1
 
-for _,b in pairs({infoBtn,farmBtn}) do
-	b.BackgroundColor3 = Color3.fromRGB(60,60,60)
-	b.TextColor3 = Color3.fromRGB(255,255,255)
-	Instance.new("UICorner", b)
-end
-
--- CONTENT
-local content = Instance.new("Frame", premium)
-content.Size = UDim2.new(0.75,0,0.8,0)
-content.Position = UDim2.new(0.25,0,0.2,0)
+-- ================= CONTENT =================
+local content = Instance.new("Frame", frame)
+content.Position = UDim2.new(0,130,0,40)
+content.Size = UDim2.new(1,-130,1,-40)
 content.BackgroundTransparency = 1
 
--- INFO PANEL
-local infoPanel = Instance.new("Frame", content)
-infoPanel.Size = UDim2.new(1,0,1,0)
-infoPanel.BackgroundTransparency = 1
+local infoLabel = Instance.new("TextLabel", content)
+infoLabel.Size = UDim2.new(1,0,1,0)
+infoLabel.TextColor3 = Color3.new(1,1,1)
+infoLabel.BackgroundTransparency = 1
+infoLabel.TextScaled = true
+infoLabel.Text = "User: "..LocalPlayer.Name.."\nUID: "..LocalPlayer.UserId.."\nRegion: Asia/HoChiMinh\nTiktok: @nghbt255\nZalo: 0394310186"
 
-local avatar2 = avatar:Clone()
-avatar2.Parent = infoPanel
-avatar2.Size = UDim2.new(0,80,0,80)
+-- ================= NOTIFY SYSTEM =================
+local notifications = {}
 
-local infoText = Instance.new("TextLabel", infoPanel)
-infoText.Position = UDim2.new(0,0,0,90)
-infoText.Size = UDim2.new(1,0,1,-90)
-infoText.Text = "UID: "..LocalPlayer.UserId.."\nAsia/HoChiMinh\nTikTok: @nghbt255\nZalo: 0394310186"
-infoText.TextColor3 = Color3.fromRGB(255,255,255)
-infoText.BackgroundTransparency = 1
-infoText.TextScaled = true
+function createNotify(msg)
+	local notif = Instance.new("Frame", gui)
+	notif.Size = UDim2.new(0,260,0,50)
+	notif.Position = UDim2.new(1,300,0,100)
+	notif.BackgroundColor3 = Color3.fromRGB(80,80,80)
+	Instance.new("UICorner", notif)
 
--- FARM PANEL
-local farmPanel = Instance.new("Frame", content)
-farmPanel.Size = UDim2.new(1,0,1,0)
-farmPanel.Visible = false
-farmPanel.BackgroundTransparency = 1
+	local txt = Instance.new("TextLabel", notif)
+	txt.Size = UDim2.new(1,-30,1,0)
+	txt.BackgroundTransparency = 1
+	txt.TextColor3 = Color3.new(1,1,1)
+	txt.TextScaled = true
+	txt.Text = msg
 
-local killBtn = Instance.new("TextButton", farmPanel)
-killBtn.Text = "Kill Player"
-killBtn.Size = UDim2.new(1,0,0,50)
+	local close = Instance.new("TextButton", notif)
+	close.Size = UDim2.new(0,30,0,30)
+	close.Position = UDim2.new(1,-30,0,0)
+	close.Text = "X"
+	close.BackgroundTransparency = 1
+	close.TextColor3 = Color3.new(1,1,1)
 
-local hitboxBtn = Instance.new("TextButton", farmPanel)
-hitboxBtn.Text = "Hitbox"
-hitboxBtn.Position = UDim2.new(0,0,0,60)
-hitboxBtn.Size = UDim2.new(1,0,0,50)
+	table.insert(notifications, notif)
 
-local notifyBtn = Instance.new("TextButton", farmPanel)
-notifyBtn.Text = "Toggle Notify"
-notifyBtn.Position = UDim2.new(0,0,0,120)
-notifyBtn.Size = UDim2.new(1,0,0,50)
+	for i,v in pairs(notifications) do
+		v:TweenPosition(UDim2.new(1,-270,0,100 + (i-1)*60))
+	end
 
-for _,b in pairs({killBtn,hitboxBtn,notifyBtn}) do
-	b.BackgroundColor3 = Color3.fromRGB(80,80,80)
-	b.TextColor3 = Color3.fromRGB(255,255,255)
-	Instance.new("UICorner", b)
-end
+	notif:TweenPosition(UDim2.new(1,-270,0,100))
 
--- BUTTON LOGIC
-infoBtn.MouseButton1Click:Connect(function()
-	infoPanel.Visible = true
-	farmPanel.Visible = false
-end)
+	close.MouseButton1Click:Connect(function()
+		notif:Destroy()
+	end)
 
-farmBtn.MouseButton1Click:Connect(function()
-	infoPanel.Visible = false
-	farmPanel.Visible = true
-end)
-
-killBtn.MouseButton1Click:Connect(function()
-	auraEnabled = true
-	notify("Kill Player Enabled")
-end)
-
-hitboxBtn.MouseButton1Click:Connect(function()
-	for _,p in pairs(Players:GetPlayers()) do
-		if p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-			p.Character.HumanoidRootPart.Size = Vector3.new(250,250,250)
+	task.delay(5,function()
+		if notif.Parent then
+			notif:TweenPosition(UDim2.new(1,300,notif.Position.Y.Scale,notif.Position.Y.Offset))
+			task.wait(0.3)
+			notif:Destroy()
 		end
-	end
-	notify("Hitbox Expanded")
-end)
-
-notifyBtn.MouseButton1Click:Connect(function()
-	notifyEnabled = not notifyEnabled
-	notify("Notify: "..tostring(notifyEnabled))
-end)
-
--- MINIMIZE
-minimize.MouseButton1Click:Connect(function()
-	premium.Visible = false
-end)
-
--- EXPAND
-local big = false
-expand.MouseButton1Click:Connect(function()
-	big = not big
-	if big then
-		premium.Size = UDim2.new(0,650,0,450)
-	else
-		premium.Size = UDim2.new(0,500,0,350)
-	end
-end)
-
--- CLOSE CONFIRM
-local confirm = Instance.new("Frame", gui)
-confirm.Size = UDim2.new(0,300,0,150)
-confirm.Position = UDim2.new(0.5,-150,0.5,-75)
-confirm.BackgroundColor3 = Color3.fromRGB(50,50,50)
-confirm.Visible = false
-Instance.new("UICorner", confirm)
-
-local txt = Instance.new("TextLabel", confirm)
-txt.Size = UDim2.new(1,0,0.6,0)
-txt.Text = "Script đang hoạt động\nBạn muốn dừng?"
-txt.TextColor3 = Color3.new(1,1,1)
-txt.BackgroundTransparency = 1
-
-local yes = Instance.new("TextButton", confirm)
-yes.Text = "Yes"
-yes.Size = UDim2.new(0.5,0,0.4,0)
-yes.Position = UDim2.new(0,0,0.6,0)
-
-local no = Instance.new("TextButton", confirm)
-no.Text = "No"
-no.Size = UDim2.new(0.5,0,0.4,0)
-no.Position = UDim2.new(0.5,0,0.6,0)
-
-for _,b in pairs({yes,no}) do
-	b.BackgroundColor3 = Color3.fromRGB(80,80,80)
-	b.TextColor3 = Color3.new(1,1,1)
+	end)
 end
 
-close.MouseButton1Click:Connect(function()
-	confirm.Visible = true
-end)
-
-yes.MouseButton1Click:Connect(function()
-	gui:Destroy()
-end)
-
-no.MouseButton1Click:Connect(function()
-	confirm.Visible = false
-end)
-
--- OPEN MAIN
+-- ================= LOGO CLICK =================
+local zoomed = false
 logo.MouseButton1Click:Connect(function()
-	premium.Visible = not premium.Visible
+	frame.Visible = not frame.Visible
+	zoomed = not zoomed
+	
+	if zoomed then
+		logo.TextSize = 50
+	else
+		logo.TextSize = 30
+	end
+end)
+
+-- ================= BUTTON LOGIC =================
+closeTab.MouseButton1Click:Connect(function()
 	frame.Visible = false
+end)
+
+exitBtn.MouseButton1Click:Connect(function()
+	local confirm = Instance.new("Frame", gui)
+	confirm.Size = UDim2.new(0,300,0,150)
+	confirm.Position = UDim2.new(0.5,-150,0.5,-75)
+	confirm.BackgroundColor3 = Color3.fromRGB(80,80,80)
+
+	local txt = Instance.new("TextLabel", confirm)
+	txt.Size = UDim2.new(1,0,0.6,0)
+	txt.Text = "Script đang hoạt động, bạn muốn tắt?"
+	txt.TextScaled = true
+	txt.BackgroundTransparency = 1
+
+	local yes = Instance.new("TextButton", confirm)
+	yes.Size = UDim2.new(0.5,0,0.4,0)
+	yes.Position = UDim2.new(0,0,0.6,0)
+	yes.Text = "Yes"
+
+	local no = Instance.new("TextButton", confirm)
+	no.Size = UDim2.new(0.5,0,0.4,0)
+	no.Position = UDim2.new(0.5,0,0.6,0)
+	no.Text = "No"
+
+	yes.MouseButton1Click:Connect(function()
+		gui:Destroy()
+	end)
+
+	no.MouseButton1Click:Connect(function()
+		confirm:Destroy()
+	end)
+end)
+
+-- ================= ESP (MƯỢT) =================
+function createESP(player)
+	local highlight = Instance.new("Highlight")
+	highlight.FillTransparency = 1
+	highlight.OutlineColor = Color3.fromRGB(0,255,0)
+	highlight.Parent = player.Character
+end
+
+-- ================= AUTO LOAD =================
+task.spawn(function()
+	task.wait(1)
+	createNotify("Cảm ơn bạn đã dùng script")
+	createNotify("Tiktok: @nghbt255")
+	createNotify("Zalo: 0394310186")
 end)
