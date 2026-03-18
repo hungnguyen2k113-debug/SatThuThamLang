@@ -3,14 +3,12 @@ local LocalPlayer = Players.LocalPlayer
 
 local gui = Instance.new("ScreenGui", game.CoreGui)
 
--- LOGO AVATAR IMAGE
+-- LOGO
 local logo = Instance.new("ImageButton", gui)
 logo.Size = UDim2.new(0,60,0,60)
 logo.Position = UDim2.new(0,20,0,200)
 
--- ẢNH CỦA BẠN (catbox)
-logo.Image = "https://files.catbox.moe/h05lxf.jpg"
-
+logo.Image = "https://files.catbox.moe/h05lxf.jpg" -- tạm dùng
 logo.BackgroundTransparency = 1
 logo.AutoButtonColor = false
 
@@ -18,74 +16,55 @@ logo.AutoButtonColor = false
 local corner = Instance.new("UICorner", logo)
 corner.CornerRadius = UDim.new(1,0)
 
--- VIỀN
-local stroke = Instance.new("UIStroke", logo)
-stroke.Thickness = 2
-stroke.Color = Color3.fromRGB(255,255,255)
+-- ZOOM SETTINGS
+local zoomed = false
 
--- GRADIENT làm mờ xung quanh
-local gradient = Instance.new("UIGradient", logo)
-gradient.Transparency = NumberSequence.new{
-	NumberSequenceKeypoint.new(0, 0.4), -- rìa mờ
-	NumberSequenceKeypoint.new(0.5, 0), -- giữa rõ
-	NumberSequenceKeypoint.new(1, 0.4)
-}
+-- giả lập kích thước ảnh
+logo.ImageRectSize = Vector2.new(420,420)
+logo.ImageRectOffset = Vector2.new(0,0)
 
--- TRẠNG THÁI
-local opened = false
-
--- CLICK → ZOOM + HIỆN FULL
+-- CLICK → ZOOM ẢNH (KHÔNG SCALE UI)
 logo.MouseButton1Click:Connect(function()
-	opened = not opened
+	zoomed = not zoomed
 	
-	if opened then
-		-- ZOOM TO
-		logo:TweenSize(UDim2.new(0,100,0,100), "Out", "Quad", 0.25, true)
+	if zoomed then
+		-- zoom vào giữa
+		logo:TweenSize(logo.Size, "Out", "Quad", 0.2, true)
 		
-		-- BỎ MỜ (hiện full)
-		gradient.Transparency = NumberSequence.new(0)
-		
+		logo.ImageRectOffset = Vector2.new(80,80)
+		logo.ImageRectSize = Vector2.new(260,260)
 	else
-		-- THU NHỎ
-		logo:TweenSize(UDim2.new(0,60,0,60), "Out", "Quad", 0.25, true)
-		
-		-- MỜ LẠI
-		gradient.Transparency = NumberSequence.new{
-			NumberSequenceKeypoint.new(0, 0.4),
-			NumberSequenceKeypoint.new(0.5, 0),
-			NumberSequenceKeypoint.new(1, 0.4)
-		}
+		-- zoom ra full
+		logo.ImageRectOffset = Vector2.new(0,0)
+		logo.ImageRectSize = Vector2.new(420,420)
 	end
 end)
 
 --------------------------------------------------
--- DRAG (GIỮ KÉO)
+-- DRAG MƯỢT (FIX FULL)
 --------------------------------------------------
+local UIS = game:GetService("UserInputService")
+
 local dragging = false
-local dragInput, dragStart, startPos
+local dragStart
+local startPos
 
 logo.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
 		dragging = true
 		dragStart = input.Position
 		startPos = logo.Position
-		
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
-			end
-		end)
 	end
 end)
 
-logo.InputChanged:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseMovement then
-		dragInput = input
+logo.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
 	end
 end)
 
-game:GetService("UserInputService").InputChanged:Connect(function(input)
-	if input == dragInput and dragging then
+UIS.InputChanged:Connect(function(input)
+	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
 		local delta = input.Position - dragStart
 		
 		logo.Position = UDim2.new(
@@ -96,7 +75,6 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
 		)
 	end
 end)
-
 -- MAIN FRAME (TO + VIỀN VÀNG)
 local frame = Instance.new("Frame", gui)
 frame.Size = UDim2.new(0,320,0,300)
