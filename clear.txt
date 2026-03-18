@@ -8,18 +8,28 @@ local gui = Instance.new("ScreenGui", game.CoreGui)
 local logo = Instance.new("TextButton", gui)
 logo.Size = UDim2.new(0,60,0,60)
 logo.Position = UDim2.new(0,20,0,200)
-logo.Text = "🐿️"
-logo.TextSize = 30
-logo.Font = Enum.Font.GothamBold
-logo.BackgroundColor3 = Color3.fromRGB(120,120,120)
-logo.BackgroundTransparency = 0.3
+logo.Text = "🐿️" -- bỏ emoji
+
+logo.BackgroundColor3 = Color3.fromRGB(255,255,255)
+logo.BackgroundTransparency = 0.4
 logo.AutoButtonColor = false
 Instance.new("UICorner", logo).CornerRadius = UDim.new(1,0)
 
--- DRAG LOGO
-local dragging, dragStart, startPos
+-- AVATAR IMAGE
+local avatar = Instance.new("ImageLabel", logo)
+avatar.Size = UDim2.new(1,0,1,0)
+avatar.BackgroundTransparency = 1
+avatar.Image = "rbxthumb://type=AvatarHeadShot&id="..LocalPlayer.UserId.."&w=150&h=150"
+
+-- DRAG LOGO (MƯỢT + TOUCH)
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
 logo.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+	if input.UserInputType == Enum.UserInputType.MouseButton1 
+	or input.UserInputType == Enum.UserInputType.Touch then
+		
 		dragging = true
 		dragStart = input.Position
 		startPos = logo.Position
@@ -27,14 +37,20 @@ logo.InputBegan:Connect(function(input)
 end)
 
 logo.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+	if input.UserInputType == Enum.UserInputType.MouseButton1 
+	or input.UserInputType == Enum.UserInputType.Touch then
+		
 		dragging = false
 	end
 end)
 
 UIS.InputChanged:Connect(function(input)
-	if dragging then
+	if dragging and (
+		input.UserInputType == Enum.UserInputType.MouseMovement 
+		or input.UserInputType == Enum.UserInputType.Touch) then
+		
 		local delta = input.Position - dragStart
+		
 		logo.Position = UDim2.new(
 			startPos.X.Scale,
 			startPos.X.Offset + delta.X,
@@ -138,8 +154,15 @@ function createNotify(msg)
 	notif.BackgroundColor3 = Color3.fromRGB(80,80,80)
 	Instance.new("UICorner", notif)
 
+	-- AVATAR NHỎ
+	local ava = Instance.new("ImageLabel", notif)
+	ava.Size = UDim2.new(0,50,1,0)
+	ava.BackgroundTransparency = 1
+	ava.Image = avatar.Image
+
 	local txt = Instance.new("TextLabel", notif)
-	txt.Size = UDim2.new(1,-30,1,0)
+	txt.Size = UDim2.new(1,-80,1,0)
+	txt.Position = UDim2.new(0,60,0,0)
 	txt.BackgroundTransparency = 1
 	txt.TextColor3 = Color3.new(1,1,1)
 	txt.TextScaled = true
@@ -180,9 +203,11 @@ logo.MouseButton1Click:Connect(function()
 	zoomed = not zoomed
 	
 	if zoomed then
-		logo.TextSize = 50
+		logo.Size = UDim2.new(0,75,0,75)
+		logo.BackgroundTransparency = 0
 	else
-		logo.TextSize = 30
+		logo.Size = UDim2.new(0,60,0,60)
+		logo.BackgroundTransparency = 0.4
 	end
 end)
 
@@ -222,7 +247,7 @@ exitBtn.MouseButton1Click:Connect(function()
 	end)
 end)
 
--- ================= ESP (MƯỢT) =================
+-- ================= ESP =================
 function createESP(player)
 	local highlight = Instance.new("Highlight")
 	highlight.FillTransparency = 1
@@ -233,7 +258,8 @@ end
 -- ================= AUTO LOAD =================
 task.spawn(function()
 	task.wait(1)
-	createNotify("Cảm ơn bạn đã dùng script")
+	createNotify("👋 Xin chào "..LocalPlayer.Name)
+	createNotify("Cảm ơn bạn đã dùng script ❤️")
 	createNotify("Tiktok: @nghbt255")
 	createNotify("Zalo: 0394310186")
 end)
