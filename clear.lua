@@ -500,5 +500,5 @@ end)
 
 task.spawn(function()
 	task.wait(1)
-	createNotify("Cảm ơn bạn đã dùng script ❤️ 🤗 Xin chào"..LocalPlayer.Name)
+	createNotify("🤗 Xin chào"..LocalPlayer.Name)
 end)
