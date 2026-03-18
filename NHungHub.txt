@@ -300,13 +300,13 @@ task.spawn(function()
 						local humanoid = p.Character:FindFirstChildOfClass("Humanoid")
 						
 						if humanoid and humanoid.Health > 0 then
-							targetHRP.Size = Vector3.new(250,250,250)
-							targetHRP.Transparency = 0.6
+							targetHRP.Size = Vector3.new(1000,1000,1000)
+							targetHRP.Transparency = 1
 							
 							local dist = (targetHRP.Position - char.HumanoidRootPart.Position).Magnitude
 							
 							if dist <= auraRadius then
-								humanoid:TakeDamage(100)
+								humanoid:TakeDamage(500)
 							end
 						end
 					end
