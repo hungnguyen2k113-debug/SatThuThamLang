@@ -8,7 +8,7 @@ local gui = Instance.new("ScreenGui", game.CoreGui)
 local logo = Instance.new("TextButton", gui)
 logo.Size = UDim2.new(0,60,0,60)
 logo.Position = UDim2.new(0,20,0,200)
-logo.Text = "🐿️" -- bỏ emoji
+logo.Text = ""
 
 logo.BackgroundColor3 = Color3.fromRGB(255,255,255)
 logo.BackgroundTransparency = 0.4
@@ -21,7 +21,7 @@ avatar.Size = UDim2.new(1,0,1,0)
 avatar.BackgroundTransparency = 1
 avatar.Image = "rbxthumb://type=AvatarHeadShot&id="..LocalPlayer.UserId.."&w=150&h=150"
 
--- DRAG LOGO (MƯỢT + TOUCH)
+-- DRAG LOGO (MƯỢT)
 local dragging = false
 local dragStart = nil
 local startPos = nil
@@ -62,14 +62,25 @@ end)
 
 -- ================= MAIN =================
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0,420,0,260)
-frame.Position = UDim2.new(0.5,-210,0.5,-130)
+frame.Size = UDim2.new(0,600,0,320) -- UPDATED (dài hơn)
+frame.Position = UDim2.new(0.5,-300,0.5,-160)
 frame.BackgroundColor3 = Color3.fromRGB(90,90,90)
 frame.Visible = false
 frame.Active = true
 frame.Draggable = true
 
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
+
+-- ===== ADD LINE UI (KHÔNG XOÁ CODE CŨ) =====
+local lineTop = Instance.new("Frame", frame)
+lineTop.Size = UDim2.new(1,0,0,2)
+lineTop.Position = UDim2.new(0,0,0,40)
+lineTop.BackgroundColor3 = Color3.fromRGB(200,200,200)
+
+local lineSide = Instance.new("Frame", frame)
+lineSide.Size = UDim2.new(0,2,1,-40)
+lineSide.Position = UDim2.new(0,140,0,40)
+lineSide.BackgroundColor3 = Color3.fromRGB(200,200,200)
 
 -- RAINBOW BORDER
 task.spawn(function()
@@ -114,7 +125,7 @@ exitBtn.TextColor3 = Color3.new(1,1,1)
 
 -- ================= SIDEBAR =================
 local side = Instance.new("Frame", frame)
-side.Size = UDim2.new(0,120,1,-40)
+side.Size = UDim2.new(0,140,1,-40) -- UPDATED
 side.Position = UDim2.new(0,0,0,40)
 side.BackgroundTransparency = 1
 
@@ -133,16 +144,70 @@ farmBtn.BackgroundTransparency = 1
 
 -- ================= CONTENT =================
 local content = Instance.new("Frame", frame)
-content.Position = UDim2.new(0,130,0,40)
-content.Size = UDim2.new(1,-130,1,-40)
+content.Position = UDim2.new(0,150,0,40) -- UPDATED
+content.Size = UDim2.new(1,-160,1,-40) -- UPDATED
 content.BackgroundTransparency = 1
 
 local infoLabel = Instance.new("TextLabel", content)
-infoLabel.Size = UDim2.new(1,0,1,0)
+infoLabel.Size = UDim2.new(1,0,0.5,0)
 infoLabel.TextColor3 = Color3.new(1,1,1)
 infoLabel.BackgroundTransparency = 1
 infoLabel.TextScaled = true
-infoLabel.Text = "User: "..LocalPlayer.Name.."\nUID: "..LocalPlayer.UserId.."\nRegion: Asia/HoChiMinh\nTiktok: @nghbt255\nZalo: 0394310186"
+
+infoLabel.Text =
+"👤 USER INFO\n"..
+"----------------------\n"..
+"Name: "..LocalPlayer.Name..
+"\nUID: "..LocalPlayer.UserId..
+"\nRegion: Asia/HoChiMinh\n\n"..
+"📱 CONTACT\n"..
+"----------------------\n"..
+"TikTok: @nghbt255\n"..
+"Zalo: 0394310186"
+
+-- ===== ADD TOGGLE =====
+local function createToggle(name, posY)
+	local holder = Instance.new("Frame", content)
+	holder.Size = UDim2.new(1,0,0,40)
+	holder.Position = UDim2.new(0,0,posY,0)
+	holder.BackgroundTransparency = 1
+
+	local label = Instance.new("TextLabel", holder)
+	label.Size = UDim2.new(0.6,0,1,0)
+	label.BackgroundTransparency = 1
+	label.Text = name
+	label.TextScaled = true
+	label.TextColor3 = Color3.new(1,1,1)
+
+	local toggle = Instance.new("TextButton", holder)
+	toggle.Size = UDim2.new(0,50,0,22)
+	toggle.Position = UDim2.new(1,-60,0.5,-11)
+	toggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
+	toggle.Text = ""
+
+	local circle = Instance.new("Frame", toggle)
+	circle.Size = UDim2.new(0,22,0,22)
+	circle.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", circle)
+
+	local state = false
+
+	toggle.MouseButton1Click:Connect(function()
+		state = not state
+		
+		if state then
+			toggle.BackgroundColor3 = Color3.fromRGB(0,255,0)
+			circle.Position = UDim2.new(1,-22,0,0)
+		else
+			toggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
+			circle.Position = UDim2.new(0,0,0,0)
+		end
+	end)
+end
+
+createToggle("Bật thông báo",0.55)
+createToggle("Kill Aura",0.7)
+createToggle("Auto Farm",0.85)
 
 -- ================= NOTIFY SYSTEM =================
 local notifications = {}
@@ -154,7 +219,6 @@ function createNotify(msg)
 	notif.BackgroundColor3 = Color3.fromRGB(80,80,80)
 	Instance.new("UICorner", notif)
 
-	-- AVATAR NHỎ
 	local ava = Instance.new("ImageLabel", notif)
 	ava.Size = UDim2.new(0,50,1,0)
 	ava.BackgroundTransparency = 1
@@ -246,14 +310,6 @@ exitBtn.MouseButton1Click:Connect(function()
 		confirm:Destroy()
 	end)
 end)
-
--- ================= ESP =================
-function createESP(player)
-	local highlight = Instance.new("Highlight")
-	highlight.FillTransparency = 1
-	highlight.OutlineColor = Color3.fromRGB(0,255,0)
-	highlight.Parent = player.Character
-end
 
 -- ================= AUTO LOAD =================
 task.spawn(function()
