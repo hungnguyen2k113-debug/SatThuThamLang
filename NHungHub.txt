@@ -3,45 +3,44 @@ local LocalPlayer = Players.LocalPlayer
 
 local gui = Instance.new("ScreenGui", game.CoreGui)
 
--- LOGO
-local logo = Instance.new("ImageButton", gui)
+-- LOGO (EMOJI)
+local logo = Instance.new("TextButton", gui)
 logo.Size = UDim2.new(0,60,0,60)
 logo.Position = UDim2.new(0,20,0,200)
 
-logo.Image = "https://files.catbox.moe/h05lxf.jpg" -- tạm dùng
-logo.BackgroundTransparency = 1
+logo.Text = "🐿️"
+logo.TextScaled = true
+logo.Font = Enum.Font.GothamBold
+
+logo.BackgroundColor3 = Color3.fromRGB(40,40,40)
 logo.AutoButtonColor = false
 
 -- BO TRÒN
 local corner = Instance.new("UICorner", logo)
 corner.CornerRadius = UDim.new(1,0)
 
--- ZOOM SETTINGS
+-- TRẠNG THÁI
 local zoomed = false
 
--- giả lập kích thước ảnh
-logo.ImageRectSize = Vector2.new(420,420)
-logo.ImageRectOffset = Vector2.new(0,0)
+-- SCALE TEXT (zoom bên trong)
+logo.TextSize = 30 -- ~2/3 ban đầu
 
--- CLICK → ZOOM ẢNH (KHÔNG SCALE UI)
+-- CLICK → ZOOM
 logo.MouseButton1Click:Connect(function()
 	zoomed = not zoomed
 	
 	if zoomed then
-		-- zoom vào giữa
+		-- ZOOM TO (chỉ emoji)
 		logo:TweenSize(logo.Size, "Out", "Quad", 0.2, true)
-		
-		logo.ImageRectOffset = Vector2.new(80,80)
-		logo.ImageRectSize = Vector2.new(260,260)
+		logo.TextSize = 50
 	else
-		-- zoom ra full
-		logo.ImageRectOffset = Vector2.new(0,0)
-		logo.ImageRectSize = Vector2.new(420,420)
+		-- THU NHỎ
+		logo.TextSize = 30
 	end
 end)
 
 --------------------------------------------------
--- DRAG MƯỢT (FIX FULL)
+-- DRAG MƯỢT (GIỮ KÉO)
 --------------------------------------------------
 local UIS = game:GetService("UserInputService")
 
@@ -75,6 +74,7 @@ UIS.InputChanged:Connect(function(input)
 		)
 	end
 end)
+
 -- MAIN FRAME (TO + VIỀN VÀNG)
 local frame = Instance.new("Frame", gui)
 frame.Size = UDim2.new(0,320,0,300)
