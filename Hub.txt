@@ -1,0 +1,274 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui", game.CoreGui)
+
+-- LOGO
+local logo = Instance.new("TextButton", gui)
+logo.Size = UDim2.new(0,60,0,60)
+logo.Position = UDim2.new(0,20,0,200)
+logo.Text = "🍑"
+logo.TextScaled = true
+logo.BackgroundColor3 = Color3.fromRGB(40,40,40)
+logo.AutoButtonColor = false
+
+local logoCorner = Instance.new("UICorner", logo)
+logoCorner.CornerRadius = UDim.new(0,15)
+
+-- DRAG LOGO
+local dragging = false
+local dragInput, dragStart, startPos
+
+logo.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = logo.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+logo.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		dragInput = input
+	end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		logo.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
+-- MENU
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0,260,0,260)
+frame.Position = UDim2.new(0.7,0,0.2,0)
+frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+frame.Visible = false
+frame.Active = true
+frame.Draggable = true
+
+local frameCorner = Instance.new("UICorner", frame)
+frameCorner.CornerRadius = UDim.new(0,12)
+
+logo.MouseButton1Click:Connect(function()
+	frame.Visible = not frame.Visible
+end)
+
+-- HEADER TRÁI
+local headerLeft = Instance.new("TextLabel", frame)
+headerLeft.Size = UDim2.new(1,-40,0,25)
+headerLeft.Position = UDim2.new(0,5,0,0)
+headerLeft.BackgroundTransparency = 1
+headerLeft.Text = "NgHungHub - Sát Thủ Thầm Lặng | By real_NgHung"
+headerLeft.TextScaled = true
+headerLeft.Font = Enum.Font.Arcade
+headerLeft.TextXAlignment = Enum.TextXAlignment.Left
+
+-- NÚT X (PHẢI)
+local closeMain = Instance.new("TextButton", frame)
+closeMain.Size = UDim2.new(0,25,0,25)
+closeMain.Position = UDim2.new(1,-30,0,0)
+closeMain.Text = "X"
+closeMain.BackgroundColor3 = Color3.fromRGB(200,0,0)
+closeMain.TextScaled = true
+Instance.new("UICorner", closeMain).CornerRadius = UDim.new(1,0)
+
+closeMain.MouseButton1Click:Connect(function()
+	frame.Visible = false
+end)
+
+-- TITLE (NHỎ LẠI)
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1,0,0,25)
+title.Position = UDim2.new(0,0,0,25)
+title.BackgroundTransparency = 1
+title.Text = "NgHung Hub"
+title.Font = Enum.Font.Arcade
+title.TextScaled = true
+
+-- BIẾN
+local notifyEnabled = true
+local auraEnabled = false
+local espEnabled = false
+local tpEnabled = false
+
+-- ===== NOTIFY =====
+local notifyFrame = Instance.new("Frame", gui)
+notifyFrame.Size = UDim2.new(0,240,0,55)
+notifyFrame.Position = UDim2.new(1,-250,1,-70)
+notifyFrame.BackgroundColor3 = Color3.fromRGB(25,25,25)
+notifyFrame.Visible = false
+notifyFrame.BorderColor3 = Color3.fromRGB(255,0,0)
+notifyFrame.BorderSizePixel = 2
+
+Instance.new("UICorner", notifyFrame).CornerRadius = UDim.new(0,10)
+
+local avatar = Instance.new("ImageLabel", notifyFrame)
+avatar.Size = UDim2.new(0.4,0,1,0)
+avatar.BackgroundTransparency = 1
+avatar.Image = "rbxthumb://type=AvatarHeadShot&id="..LocalPlayer.UserId.."&w=150&h=150"
+
+local notifyText = Instance.new("TextLabel", notifyFrame)
+notifyText.Size = UDim2.new(0.5,0,1,0)
+notifyText.Position = UDim2.new(0.4,0,0,0)
+notifyText.BackgroundTransparency = 1
+notifyText.TextScaled = true
+notifyText.Font = Enum.Font.Arcade
+notifyText.TextWrapped = true
+
+local closeBtn = Instance.new("TextButton", notifyFrame)
+closeBtn.Size = UDim2.new(0,20,0,20)
+closeBtn.Position = UDim2.new(1,-25,0,5)
+closeBtn.Text = "X"
+closeBtn.BackgroundColor3 = Color3.fromRGB(80,80,80)
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(1,0)
+
+closeBtn.MouseButton1Click:Connect(function()
+	notifyFrame.Visible = false
+end)
+
+function notify(msg)
+	if not notifyEnabled then return end
+	notifyFrame.Visible = true
+	notifyText.Text = msg
+	
+	task.spawn(function()
+		task.wait(5)
+		notifyFrame.Visible = false
+	end)
+end
+
+task.spawn(function()
+	task.wait(1)
+	notify("Script đã chạy!")
+end)
+
+-- ===== TOGGLE =====
+local function createToggle(name, posY, callback)
+	local holder = Instance.new("Frame", frame)
+	holder.Size = UDim2.new(0.85,0,0,35)
+	holder.Position = UDim2.new(0.075,0,posY,0)
+	holder.BackgroundTransparency = 1
+
+	local label = Instance.new("TextLabel", holder)
+	label.Size = UDim2.new(0.6,0,1,0)
+	label.BackgroundTransparency = 1
+	label.Text = name
+	label.TextScaled = true
+	label.Font = Enum.Font.Arcade
+
+	local toggle = Instance.new("Frame", holder)
+	toggle.Size = UDim2.new(0,50,0,20)
+	toggle.Position = UDim2.new(1,-55,0.5,-10)
+	toggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
+	Instance.new("UICorner", toggle).CornerRadius = UDim.new(1,0)
+
+	local circle = Instance.new("Frame", toggle)
+	circle.Size = UDim2.new(0,20,0,20)
+	circle.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", circle).CornerRadius = UDim.new(1,0)
+
+	local state = false
+
+	toggle.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			state = not state
+			
+			if state then
+				toggle.BackgroundColor3 = Color3.fromRGB(0,200,0)
+				circle.Position = UDim2.new(1,-20,0,0)
+			else
+				toggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
+				circle.Position = UDim2.new(0,0,0,0)
+			end
+			
+			callback(state)
+		end
+	end)
+end
+
+-- TOGGLES
+createToggle("Thông báo",0.2,function(v)
+	notifyEnabled = v
+end)
+
+createToggle("Kill Aura",0.35,function(v)
+	auraEnabled = v
+end)
+
+createToggle("ESP Player",0.5,function(v)
+	espEnabled = v
+	
+	if v then
+		for _,p in pairs(Players:GetPlayers()) do
+			if p ~= LocalPlayer and p.Character then
+				if not p.Character:FindFirstChild("ESP_HL") then
+					local hl = Instance.new("Highlight")
+					hl.Name = "ESP_HL"
+					hl.FillColor = Color3.fromRGB(0,255,0)
+					hl.Parent = p.Character
+				end
+			end
+		end
+		notify("ESP bật")
+	else
+		for _,p in pairs(Players:GetPlayers()) do
+			if p.Character and p.Character:FindFirstChild("ESP_HL") then
+				p.Character.ESP_HL:Destroy()
+			end
+		end
+	end
+end)
+
+createToggle("TP Player",0.65,function(v)
+	tpEnabled = v
+	
+	if v then
+		local targets = {}
+		for _,p in pairs(Players:GetPlayers()) do
+			if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+				table.insert(targets,p)
+			end
+		end
+		
+		if #targets > 0 then
+			local target = targets[math.random(1,#targets)]
+			LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame * CFrame.new(0,3,0)
+			notify("TP xong")
+		end
+	end
+end)
+
+-- ===== HITBOX AURA =====
+task.spawn(function()
+	while true do
+		task.wait(0.3)
+		if auraEnabled then
+			for _,p in pairs(Players:GetPlayers()) do
+				if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+					p.Character.HumanoidRootPart.Size = Vector3.new(20,20,20)
+					p.Character.HumanoidRootPart.Transparency = 0.7
+				end
+			end
+		else
+			for _,p in pairs(Players:GetPlayers()) do
+				if p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+					p.Character.HumanoidRootPart.Size = Vector3.new(2,2,1)
+					p.Character.HumanoidRootPart.Transparency = 1
+				end
+			end
+		end
+	end
+end)
