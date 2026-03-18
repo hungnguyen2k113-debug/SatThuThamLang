@@ -58,7 +58,7 @@ UIS.InputChanged:Connect(function(input)
 end)
 
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0,600,0,320) 
+frame.Size = UDim2.new(0,500,0,260)
 frame.Position = UDim2.new(0.5,-300,0.5,-160)
 frame.BackgroundColor3 = Color3.fromRGB(40,40,40)
 frame.Visible = false
