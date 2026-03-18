@@ -58,7 +58,7 @@ UIS.InputChanged:Connect(function(input)
 end)
 
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0,500,0,340)
+frame.Size = UDim2.new(0,500,0,300)
 frame.Position = UDim2.new(0.5,-300,0.5,-160)
 frame.BackgroundColor3 = Color3.fromRGB(40,40,40)
 frame.Visible = false
@@ -342,12 +342,11 @@ function createNotify(msg)
 	local close = Instance.new("TextButton", notif)
 	close.Size = UDim2.new(0,25,0,25)
 	close.Position = UDim2.new(1,-30,0,5)
-	close.Text = "✕"
+	close.Text = "X"
 	close.BackgroundTransparency = 1
 	close.TextColor3 = Color3.fromRGB(200,200,200)
 	close.TextSize = 14
 
-	-- SHADOW FAKE
 	local shadow = Instance.new("Frame", notif)
 	shadow.Size = UDim2.new(1,6,1,6)
 	shadow.Position = UDim2.new(0,-3,0,-3)
