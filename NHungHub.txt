@@ -91,11 +91,11 @@ UIS.InputChanged:Connect(function(input)
 end)
 
 -- MAIN FRAME (TO + VIỀN VÀNG)
-local frame = Instance.new("Frame", gui)
+local oldFrame = Instance.new("Frame", gui)
 oldFrame.Size = UDim2.new(0,320,0,300)
 oldFrame.Position = UDim2.new(0.7,0,0.2,0)
 frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
-frame.Visible = false
+oldFrame.Visible = false
 frame.Active = true
 frame.Draggable = true
 frame.BorderColor3 = Color3.fromRGB(255,255,0)
@@ -104,7 +104,9 @@ frame.BorderSizePixel = 2
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
 
 logo.MouseButton1Click:Connect(function()
-	frame.Visible = not frame.Visible
+	if frame then
+		frame.Visible = not frame.Visible
+	end
 end)
 
 -- TEXT GÓC TRÁI (RAINBOW XỊN)
