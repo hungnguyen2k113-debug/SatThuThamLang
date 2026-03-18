@@ -89,11 +89,14 @@ end)
 local top = Instance.new("TextLabel", frame)
 top.Size = UDim2.new(1,0,0,40)
 top.BackgroundTransparency = 1
-top.Text = "BananaPigHub by hynixyeuem [Premium]"
+top.Text = "BananaPigHub by Hynix yeuem [Premium]"
 top.TextColor3 = Color3.fromRGB(255, 215, 0)
 top.Font = Enum.Font.GothamBold
+top.Size = UDim2.new(1,-120,0,40)
+top.Position = UDim2.new(0,10,0,0)
 top.TextScaled = false
 top.TextSize = 14
+top.TextXAlignment = Enum.TextXAlignment.Left 
 
 local closeTab = Instance.new("TextButton", frame)
 closeTab.Size = UDim2.new(0,40,0,40)
