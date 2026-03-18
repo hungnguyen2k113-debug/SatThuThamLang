@@ -92,6 +92,7 @@ end)
 
 -- MAIN FRAME (TO + VIỀN VÀNG)
 local frame = Instance.new("Frame", gui)
+frame.Visible = false
 frame.Size = UDim2.new(0,320,0,300)
 frame.Position = UDim2.new(0.7,0,0.2,0)
 frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
@@ -106,8 +107,6 @@ Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
 logo.MouseButton1Click:Connect(function()
 	frame.Visible = False
 end)
-
-frame:ClearAllChildren()
 
 -- TEXT GÓC TRÁI (RAINBOW XỊN)
 local topText = Instance.new("TextLabel", frame)
