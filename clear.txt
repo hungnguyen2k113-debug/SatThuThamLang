@@ -1,0 +1,193 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui", game.CoreGui)
+
+-- LOGO
+local logo = Instance.new("TextButton", gui)
+logo.Size = UDim2.new(0,60,0,60)
+logo.Position = UDim2.new(0,20,0,200)
+logo.Text = "🐿️"
+logo.TextSize = 30
+logo.Font = Enum.Font.GothamBold
+logo.BackgroundColor3 = Color3.fromRGB(255,255,255)
+logo.BackgroundTransparency = 0.4
+logo.AutoButtonColor = false
+Instance.new("UICorner", logo).CornerRadius = UDim.new(1,0)
+
+-- ZOOM + TOGGLE MAIN
+local zoomed = false
+
+-- DRAG
+local UIS = game:GetService("UserInputService")
+local dragging, dragStart, startPos
+
+logo.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = logo.Position
+	end
+end)
+
+logo.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = false
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if dragging then
+		local delta = input.Position - dragStart
+		logo.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
+-- MAIN FRAME (GIỮ LẠI)
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0,320,0,300)
+frame.Position = UDim2.new(0.5,-160,0.5,-150)
+frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+frame.Visible = false
+frame.BorderSizePixel = 2
+
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
+
+-- FIX CLICK LOGO
+logo.MouseButton1Click:Connect(function()
+	zoomed = not zoomed
+	
+	if zoomed then
+		logo.TextSize = 50
+		logo.BackgroundTransparency = 0
+	else
+		logo.TextSize = 30
+		logo.BackgroundTransparency = 0.4
+	end
+	
+	frame.Visible = not frame.Visible
+end)
+
+-- ====== GIỮ NGUYÊN LOGIC ======
+
+local notifyEnabled = true
+local auraEnabled = false
+
+-- NOTIFY
+local notifyFrame = Instance.new("Frame", gui)
+notifyFrame.Size = UDim2.new(0,260,0,60)
+notifyFrame.Position = UDim2.new(1,-270,1,-80)
+notifyFrame.BackgroundColor3 = Color3.fromRGB(25,25,25)
+notifyFrame.Visible = false
+notifyFrame.BorderSizePixel = 2
+Instance.new("UICorner", notifyFrame)
+
+local avatar = Instance.new("ImageLabel", notifyFrame)
+avatar.Size = UDim2.new(0.4,0,1,0)
+avatar.BackgroundTransparency = 1
+avatar.Image = "rbxthumb://type=AvatarHeadShot&id="..LocalPlayer.UserId.."&w=150&h=150"
+
+local notifyText = Instance.new("TextLabel", notifyFrame)
+notifyText.Size = UDim2.new(0.6,0,1,0)
+notifyText.Position = UDim2.new(0.4,0,0,0)
+notifyText.BackgroundTransparency = 1
+notifyText.TextColor3 = Color3.fromRGB(255,255,255)
+notifyText.TextScaled = true
+
+function notify(msg)
+	if not notifyEnabled then return end
+	notifyFrame.Visible = true
+	notifyText.Text = msg
+	
+	task.delay(5,function()
+		notifyFrame.Visible = false
+	end)
+end
+
+task.spawn(function()
+	task.wait(1)
+	notify("👋 Xin chào "..LocalPlayer.Name)
+end)
+
+-- ESP
+local function applyESP(player)
+	if player ~= LocalPlayer then
+		player.CharacterAdded:Connect(function(char)
+			task.wait(1)
+			if not char:FindFirstChild("ESP_HL") then
+				local hl = Instance.new("Highlight")
+				hl.Name = "ESP_HL"
+				hl.FillColor = Color3.fromRGB(255,0,0)
+				hl.OutlineColor = Color3.fromRGB(0,255,255)
+				hl.Parent = char
+			end
+		end)
+	end
+end
+
+for _,p in pairs(Players:GetPlayers()) do
+	applyESP(p)
+end
+
+Players.PlayerAdded:Connect(applyESP)
+
+-- AURA
+local auraRadius = 9999
+
+task.spawn(function()
+	while true do
+		task.wait(0.05)
+		if auraEnabled then
+			local char = LocalPlayer.Character
+			if char and char:FindFirstChild("HumanoidRootPart") then
+				
+				for _,p in pairs(Players:GetPlayers()) do
+					if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+						
+						local target = p.Character.HumanoidRootPart
+						local humanoid = p.Character:FindFirstChildOfClass("Humanoid")
+						
+						if humanoid and humanoid.Health > 0 then
+							target.Size = Vector3.new(250,250,250)
+							target.Transparency = 1
+							
+							if (target.Position - char.HumanoidRootPart.Position).Magnitude <= auraRadius then
+								humanoid:TakeDamage(500)
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end)
+
+-- CLICK KILL MAP
+game:GetService("UserInputService").InputBegan:Connect(function(input, gp)
+	if gp then return end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if auraEnabled then
+			for _,p in pairs(Players:GetPlayers()) do
+				if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("Humanoid") then
+					p.Character.Humanoid.Health = 0
+				end
+			end
+			notify("Aura Burst Map")
+		end
+	end
+end)
+
+-- RAINBOW BORDER (MAIN MỚI)
+task.spawn(function()
+	while true do
+		for i=0,1,0.02 do
+			frame.BorderColor3 = Color3.fromHSV(i,1,1)
+			task.wait(0.03)
+		end
+	end
+end)
