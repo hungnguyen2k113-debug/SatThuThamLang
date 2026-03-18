@@ -186,6 +186,8 @@ infoLabel.BackgroundTransparency = 1
 infoLabel.TextScaled = true
 infoLabel.TextXAlignment = Enum.TextXAlignment.Left
 infoLabel.TextYAlignment = Enum.TextYAlignment.Top
+infoLabel.Size = UDim2.new(0.55,0,0.8,0)
+infoLabel.Position = UDim2.new(0.425,0,0.1,0)
 
 infoLabel.Text =
 "👤 Thông tin player\n"..
@@ -196,10 +198,6 @@ infoLabel.Text =
 "TikTok: @nghbt255\n"..
 "Zalo: 0394310186"
 
--- ====== FIX TOGGLE SANG FARM PAGE ======
--- ===== UI FARM PREMIUM =====
-
--- TITLE FARMING
 local farmTitle = Instance.new("TextLabel", farmPage)
 farmTitle.Size = UDim2.new(1,-20,0,30)
 farmTitle.Position = UDim2.new(0,10,0,0)
@@ -301,46 +299,81 @@ local notifications = {}
 
 function createNotify(msg)
 	local notif = Instance.new("Frame", gui)
-	notif.Size = UDim2.new(0,260,0,50)
-	notif.Position = UDim2.new(1,300,0,100)
-	notif.BackgroundColor3 = Color3.fromRGB(80,80,80)
-	Instance.new("UICorner", notif)
+	notif.Size = UDim2.new(0,280,0,60)
+	notif.Position = UDim2.new(1,300,1,-80)
+	notif.BackgroundColor3 = Color3.fromRGB(35,35,35)
+	notif.BackgroundTransparency = 0.1
+	Instance.new("UICorner", notif).CornerRadius = UDim.new(0,10)
 
+	-- VIỀN MÀU CHẠY
+	local stroke = Instance.new("UIStroke", notif)
+	stroke.Thickness = 1.5
+	
+	task.spawn(function()
+		while notif.Parent do
+			for i=0,1,0.05 do
+				stroke.Color = Color3.fromHSV(i,1,1)
+				task.wait(0.03)
+			end
+		end
+	end)
+
+	-- AVATAR
 	local ava = Instance.new("ImageLabel", notif)
-	ava.Size = UDim2.new(0,50,1,0)
+	ava.Size = UDim2.new(0,45,0,45)
+	ava.Position = UDim2.new(0,8,0.5,-22)
 	ava.BackgroundTransparency = 1
 	ava.Image = avatar.Image
+	Instance.new("UICorner", ava).CornerRadius = UDim.new(1,0)
 
+	-- TEXT
 	local txt = Instance.new("TextLabel", notif)
-	txt.Size = UDim2.new(1,-80,1,0)
+	txt.Size = UDim2.new(1,-70,1,0)
 	txt.Position = UDim2.new(0,60,0,0)
 	txt.BackgroundTransparency = 1
 	txt.TextColor3 = Color3.new(1,1,1)
-	txt.TextScaled = true
+	txt.TextSize = 13
+	txt.Font = Enum.Font.Gotham
+	txt.TextXAlignment = Enum.TextXAlignment.Left
+	txt.TextWrapped = true
 	txt.Text = msg
 
+	-- NÚT X
 	local close = Instance.new("TextButton", notif)
-	close.Size = UDim2.new(0,30,0,30)
-	close.Position = UDim2.new(1,-30,0,0)
-	close.Text = "X"
+	close.Size = UDim2.new(0,25,0,25)
+	close.Position = UDim2.new(1,-30,0,5)
+	close.Text = "✕"
 	close.BackgroundTransparency = 1
-	close.TextColor3 = Color3.new(1,1,1)
+	close.TextColor3 = Color3.fromRGB(200,200,200)
+	close.TextSize = 14
+
+	-- SHADOW FAKE
+	local shadow = Instance.new("Frame", notif)
+	shadow.Size = UDim2.new(1,6,1,6)
+	shadow.Position = UDim2.new(0,-3,0,-3)
+	shadow.BackgroundColor3 = Color3.new(0,0,0)
+	shadow.BackgroundTransparency = 0.8
+	shadow.ZIndex = 0
+	Instance.new("UICorner", shadow).CornerRadius = UDim.new(0,12)
 
 	table.insert(notifications, notif)
 
+	-- XẾP CHỒNG TỪ DƯỚI LÊN
 	for i,v in pairs(notifications) do
-		v:TweenPosition(UDim2.new(1,-270,0,100 + (i-1)*60))
+		v:TweenPosition(UDim2.new(1,-300,1,-80 - (i-1)*70),"Out","Quad",0.3,true)
 	end
 
-	notif:TweenPosition(UDim2.new(1,-270,0,100))
+	notif:TweenPosition(UDim2.new(1,-300,1,-80),"Out","Quad",0.3,true)
 
+	-- CLOSE
 	close.MouseButton1Click:Connect(function()
 		notif:Destroy()
 	end)
 
-	task.delay(5,function()
+	-- AUTO HIDE
+	task.delay(4,function()
 		if notif.Parent then
-			notif:TweenPosition(UDim2.new(1,300,notif.Position.Y.Scale,notif.Position.Y.Offset))
+			notif:TweenPosition(UDim2.new(1,300,notif.Position.Y.Scale,notif.Position.Y.Offset),"In","Quad",0.3,true)
 			task.wait(0.3)
 			notif:Destroy()
 		end
