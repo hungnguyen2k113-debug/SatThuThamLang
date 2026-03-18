@@ -104,7 +104,7 @@ frame.BorderSizePixel = 2
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
 
 logo.MouseButton1Click:Connect(function()
-	frame.Visible = not frame.Visible
+	frame.Visible = False
 end)
 
 -- TEXT GÓC TRÁI (RAINBOW XỊN)
