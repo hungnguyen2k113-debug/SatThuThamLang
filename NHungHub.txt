@@ -1,6 +1,302 @@
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
+local gui = Instance.new("ScreenGui", game.CoreGui)
+
+-- LOGO (EMOJI)
+local logo = Instance.new("TextButton", gui)
+logo.Size = UDim2.new(0,60,0,60)
+logo.Position = UDim2.new(0,20,0,200)
+
+logo.Text = "🐿️"
+logo.TextScaled = false
+logo.TextSize = 30 -- nhỏ ~2/3 ban đầu
+logo.Font = Enum.Font.GothamBold
+
+-- NỀN TRẮNG MỜ BAN ĐẦU
+logo.BackgroundColor3 = Color3.fromRGB(255,255,255)
+logo.BackgroundTransparency = 0.4
+
+logo.AutoButtonColor = false
+
+-- BO TRÒN
+local corner = Instance.new("UICorner", logo)
+corner.CornerRadius = UDim.new(1,0)
+
+--------------------------------------------------
+-- ZOOM (CHỈ EMOJI + ĐỔI NỀN)
+--------------------------------------------------
+local zoomed = false
+
+logo.MouseButton1Click:Connect(function()
+	zoomed = not zoomed
+	
+	if zoomed then
+		-- emoji to lên
+		logo.TextSize = 50
+		
+		-- nền trắng đục
+		logo.BackgroundTransparency = 0
+		
+	else
+		-- emoji nhỏ lại
+		logo.TextSize = 30
+		
+		-- nền trắng mờ
+		logo.BackgroundTransparency = 0.4
+	end
+end)
+
+--------------------------------------------------
+-- DRAG MƯỢT (FIX KHÔNG KÉO ĐƯỢC)
+--------------------------------------------------
+local UIS = game:GetService("UserInputService")
+
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+logo.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 
+	or input.UserInputType == Enum.UserInputType.Touch then
+		
+		dragging = true
+		dragStart = input.Position
+		startPos = logo.Position
+	end
+end)
+
+logo.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 
+	or input.UserInputType == Enum.UserInputType.Touch then
+		
+		dragging = false
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if dragging and (
+		input.UserInputType == Enum.UserInputType.MouseMovement 
+		or input.UserInputType == Enum.UserInputType.Touch) then
+		
+		local delta = input.Position - dragStart
+		
+		logo.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
+-- MAIN FRAME (TO + VIỀN VÀNG)
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0,320,0,300)
+frame.Position = UDim2.new(0.7,0,0.2,0)
+frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+frame.Visible = false
+frame.Active = true
+frame.Draggable = true
+frame.BorderColor3 = Color3.fromRGB(255,255,0)
+frame.BorderSizePixel = 2
+
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
+
+logo.MouseButton1Click:Connect(function()
+	frame.Visible = False
+end)
+
+frame:ClearAllChildren()
+
+-- TEXT GÓC TRÁI (RAINBOW XỊN)
+local topText = Instance.new("TextLabel", frame)
+topText.Size = UDim2.new(1,-40,0,20)
+topText.Position = UDim2.new(0,5,0,0)
+topText.BackgroundTransparency = 1
+topText.Text = "NgHungHub Sát Thủ Thầm Lặng - By real_NgHung"
+topText.TextScaled = true
+topText.TextXAlignment = Enum.TextXAlignment.Left
+
+task.spawn(function()
+	while true do
+		for i=0,1,0.01 do
+			topText.TextColor3 = Color3.fromHSV(i,1,1)
+			task.wait(0.03)
+		end
+	end
+end)
+
+-- NÚT X MAIN
+local mainClose = Instance.new("TextButton", frame)
+mainClose.Size = UDim2.new(0,25,0,25)
+mainClose.Position = UDim2.new(1,-30,0,5)
+mainClose.Text = "X"
+mainClose.BackgroundColor3 = Color3.fromRGB(255,0,0)
+Instance.new("UICorner", mainClose).CornerRadius = UDim.new(1,0)
+
+mainClose.MouseButton1Click:Connect(function()
+	frame.Visible = false
+end)
+
+-- TITLE
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1,0,0,30)
+title.Position = UDim2.new(0,0,0,20)
+title.BackgroundTransparency = 1
+title.Text = "NgHung Hub"
+title.TextScaled = true
+
+-- BIẾN
+local notifyEnabled = true
+local auraEnabled = false
+
+-- NOTIFY (VIỀN VÀNG)
+local notifyFrame = Instance.new("Frame", gui)
+notifyFrame.Size = UDim2.new(0,260,0,60)
+notifyFrame.Position = UDim2.new(1,-270,1,-80)
+notifyFrame.BackgroundColor3 = Color3.fromRGB(25,25,25)
+notifyFrame.Visible = false
+notifyFrame.BorderColor3 = Color3.fromRGB(255,255,0)
+notifyFrame.BorderSizePixel = 2
+
+Instance.new("UICorner", notifyFrame).CornerRadius = UDim.new(0,10)
+
+local avatar = Instance.new("ImageLabel", notifyFrame)
+avatar.Size = UDim2.new(0.4,0,1,0)
+avatar.BackgroundTransparency = 1
+avatar.Image = "rbxthumb://type=AvatarHeadShot&id="..LocalPlayer.UserId.."&w=150&h=150"
+
+local notifyText = Instance.new("TextLabel", notifyFrame)
+notifyText.Size = UDim2.new(0.55,0,1,0)
+notifyText.Position = UDim2.new(0.4,0,0,0)
+notifyText.BackgroundTransparency = 1
+notifyText.TextColor3 = Color3.fromRGB(255,255,255)
+notifyText.TextScaled = true
+notifyText.TextWrapped = true
+
+local closeBtn = Instance.new("TextButton", notifyFrame)
+closeBtn.Size = UDim2.new(0,20,0,20)
+closeBtn.Position = UDim2.new(1,-25,0,5)
+closeBtn.Text = "X"
+
+closeBtn.MouseButton1Click:Connect(function()
+	notifyFrame.Visible = false
+end)
+
+function notify(msg)
+	if not notifyEnabled then return end
+	notifyFrame.Visible = true
+	notifyText.Text = msg
+	
+	task.delay(5,function()
+		if notifyFrame.Visible then
+			notifyFrame.Visible = false
+		end
+	end)
+end
+
+task.spawn(function()
+	task.wait(1)
+	notify("👋 Xin chào "..LocalPlayer.Name.."\nCảm ơn đã sử dụng script ❤️\nTikTok: @nghbt255")
+end)
+
+local function createToggle(name, posY, callback)
+	local holder = Instance.new("Frame", frame)
+	holder.Size = UDim2.new(0.8,0,0,40)
+	holder.Position = UDim2.new(0.1,0,posY,0)
+	holder.BackgroundTransparency = 1
+
+	local label = Instance.new("TextLabel", holder)
+	label.Size = UDim2.new(0.6,0,1,0)
+	label.BackgroundTransparency = 1
+	label.Text = name
+	label.TextScaled = true
+
+	local toggle = Instance.new("TextButton", holder)
+	toggle.Size = UDim2.new(0,50,0,20)
+	toggle.Position = UDim2.new(1,-60,0.5,-10)
+	toggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
+	toggle.Text = ""
+
+	local circle = Instance.new("Frame", toggle)
+	circle.Size = UDim2.new(0,20,0,20)
+	circle.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", circle)
+
+	local state = false
+
+	toggle.MouseButton1Click:Connect(function()
+		state = not state
+		
+		if state then
+			toggle.BackgroundColor3 = Color3.fromRGB(0,255,0)
+			circle.Position = UDim2.new(1,-20,0,0)
+		else
+			toggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
+			circle.Position = UDim2.new(0,0,0,0)
+		end
+		
+		callback(state)
+	end)
+end
+
+createToggle("Thông báo",0.3,function(v)
+	notifyEnabled = v
+end)
+
+createToggle("Kill Aura",0.5,function(v)
+	auraEnabled = v
+end)
+
+local esp = Instance.new("TextButton", frame)
+esp.Size = UDim2.new(0.8,0,0,40)
+esp.Position = UDim2.new(0.1,0,0.7,0)
+esp.Text = "ESP PLAYER"
+
+esp.MouseButton1Click:Connect(function()
+	for _,p in pairs(Players:GetPlayers()) do
+		if p ~= LocalPlayer and p.Character then
+			if not p.Character:FindFirstChild("ESP_HL") then
+				local hl = Instance.new("Highlight")
+				hl.Name = "ESP_HL"
+				hl.FillColor = Color3.fromRGB(255,0,0)
+				hl.OutlineColor = Color3.fromRGB(0,255,0)
+				hl.FillTransparency = 0.2
+				hl.OutlineTransparency = 0
+				hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+				hl.Parent = p.Character
+			end
+		end
+	end
+	notify("ESP bật 🔥")
+end)
+
+task.spawn(function()
+	while true do
+		task.wait(0.15)
+		if auraEnabled then
+			local char = LocalPlayer.Character
+			if char and char:FindFirstChild("HumanoidRootPart") then
+				for _,p in pairs(Players:GetPlayers()) do
+					if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+						
+						p.Character.HumanoidRootPart.Size = Vector3.new(30,30,30)
+						p.Character.HumanoidRootPart.Transparency = 0.5
+						
+						local dist = (p.Character.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Magnitude
+						if dist < 100 then
+							p.Character:FindFirstChildOfClass("Humanoid").Health = 0
+						end
+					end
+				end
+			end
+		end
+	end
+end)
+
+-- ===== ADD (KHÔNG XOÁ CODE CŨ) =====
+
 local RunService = game:GetService("RunService")
 
 local function applyESP(player)
