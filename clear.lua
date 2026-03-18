@@ -197,43 +197,53 @@ infoLabel.Text =
 "Zalo: 0394310186"
 
 -- ====== FIX TOGGLE SANG FARM PAGE ======
+-- ===== UI FARM PREMIUM =====
+
+-- TITLE FARMING
+local farmTitle = Instance.new("TextLabel", farmPage)
+farmTitle.Size = UDim2.new(1,-20,0,30)
+farmTitle.Position = UDim2.new(0,10,0,0)
+farmTitle.Text = "Farming"
+farmTitle.TextColor3 = Color3.fromRGB(255,255,255)
+farmTitle.BackgroundTransparency = 1
+farmTitle.Font = Enum.Font.GothamBold
+farmTitle.TextSize = 16 -- 🔥 nhỏ lại nhưng vẫn nổi
+farmTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+-- LINE
+local line1 = Instance.new("Frame", farmPage)
+line1.Size = UDim2.new(1,-20,0,1)
+line1.Position = UDim2.new(0,10,0,32)
+line1.BackgroundColor3 = Color3.fromRGB(120,120,120)
+
+-- FUNCTION tạo toggle đẹp
 local function createToggle(name, posY)
 	local holder = Instance.new("Frame", farmPage)
-	holder.Size = UDim2.new(1,-20,0,50)
-	holder.Position = UDim2.new(0,10,posY,0)
+	holder.Size = UDim2.new(1,-20,0,40)
+	holder.Position = UDim2.new(0,10,0,posY)
 	holder.BackgroundColor3 = Color3.fromRGB(50,50,50)
-	Instance.new("UICorner", holder).CornerRadius = UDim.new(0,10)
+	Instance.new("UICorner", holder).CornerRadius = UDim.new(0,8)
 
-	-- ICON (fake)
-	local icon = Instance.new("TextLabel", holder)
-	icon.Size = UDim2.new(0,40,1,0)
-	icon.BackgroundTransparency = 1
-	icon.Text = "⚙️"
-	icon.TextScaled = true
-
-	-- TEXT
 	local label = Instance.new("TextLabel", holder)
-	label.Size = UDim2.new(1,-110,1,0)
-	label.Position = UDim2.new(0,45,0,0)
+	label.Size = UDim2.new(0.6,0,1,0)
+	label.Position = UDim2.new(0,10,0,0)
 	label.BackgroundTransparency = 1
 	label.Text = name
-	label.TextScaled = true
-	label.TextXAlignment = Enum.TextXAlignment.Left
 	label.TextColor3 = Color3.new(1,1,1)
+	label.TextSize = 13 -- 🔥 chữ nhỏ lại
+	label.TextXAlignment = Enum.TextXAlignment.Left
 
-	-- TOGGLE
 	local toggle = Instance.new("TextButton", holder)
-	toggle.Size = UDim2.new(0,60,0,26)
-	toggle.Position = UDim2.new(1,-70,0.5,-13)
+	toggle.Size = UDim2.new(0,50,0,22)
+	toggle.Position = UDim2.new(1,-60,0.5,-11)
 	toggle.BackgroundColor3 = Color3.fromRGB(90,90,90)
 	toggle.Text = ""
 	Instance.new("UICorner", toggle).CornerRadius = UDim.new(1,0)
 
 	local circle = Instance.new("Frame", toggle)
-	circle.Size = UDim2.new(0,26,0,26)
-	circle.Position = UDim2.new(0,0,0,0)
-	circle.BackgroundColor3 = Color3.fromRGB(255,255,255)
-	Instance.new("UICorner", circle).CornerRadius = UDim.new(1,0)
+	circle.Size = UDim2.new(0,22,0,22)
+	circle.BackgroundColor3 = Color3.new(1,1,1)
+	Instance.new("UICorner", circle)
 
 	local state = false
 
@@ -242,7 +252,7 @@ local function createToggle(name, posY)
 		
 		if state then
 			toggle.BackgroundColor3 = Color3.fromRGB(0,200,100)
-			circle:TweenPosition(UDim2.new(1,-26,0,0),"Out","Quad",0.2,true)
+			circle:TweenPosition(UDim2.new(1,-22,0,0),"Out","Quad",0.2,true)
 		else
 			toggle.BackgroundColor3 = Color3.fromRGB(90,90,90)
 			circle:TweenPosition(UDim2.new(0,0,0,0),"Out","Quad",0.2,true)
@@ -250,9 +260,29 @@ local function createToggle(name, posY)
 	end)
 end
 
-createToggle("Bật thông báo Script",0)
-createToggle("Bug Hitbox Player",0.2)
-createToggle("ESP Player",0.4)
+-- TOGGLE FARM
+createToggle("Bug Hitbox Player",40)
+createToggle("ESP Player",90)
+
+-- ===== TITLE THÔNG BÁO =====
+
+local notifyTitle = Instance.new("TextLabel", farmPage)
+notifyTitle.Size = UDim2.new(1,-20,0,30)
+notifyTitle.Position = UDim2.new(0,10,0,150)
+notifyTitle.Text = "Thông Báo"
+notifyTitle.TextColor3 = Color3.fromRGB(255,255,255)
+notifyTitle.BackgroundTransparency = 1
+notifyTitle.Font = Enum.Font.GothamBold
+notifyTitle.TextSize = 16
+notifyTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local line2 = Instance.new("Frame", farmPage)
+line2.Size = UDim2.new(1,-20,0,1)
+line2.Position = UDim2.new(0,10,0,182)
+line2.BackgroundColor3 = Color3.fromRGB(120,120,120)
+
+-- TOGGLE THÔNG BÁO
+createToggle("Bật thông báo Script",190)
 
 -- ====== CHUYỂN TAB ======
 infoBtn.MouseButton1Click:Connect(function()
