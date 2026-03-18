@@ -296,8 +296,21 @@ end)
 -- ====== PHẦN DƯỚI GIỮ NGUYÊN 100% ======
 
 local notifications = {}
+local MAX_NOTIFY = 3
 
 function createNotify(msg)
+	-- Nếu đã đủ 3 thì xóa cái CŨ NHẤT (index 1)
+	if #notifications >= MAX_NOTIFY then
+		local old = notifications[1]
+		if old and old.Parent then
+			old:TweenPosition(UDim2.new(1,300,old.Position.Y.Scale,old.Position.Y.Offset),"In","Quad",0.3,true)
+			task.delay(0.3,function()
+				if old then old:Destroy() end
+			end)
+		end
+		table.remove(notifications,1)
+	end
+
 	local notif = Instance.new("Frame", gui)
 	notif.Size = UDim2.new(0,280,0,60)
 	notif.Position = UDim2.new(1,300,1,-80)
@@ -305,13 +318,14 @@ function createNotify(msg)
 	notif.BackgroundTransparency = 0.1
 	Instance.new("UICorner", notif).CornerRadius = UDim.new(0,10)
 
-	-- VIỀN MÀU CHẠY
+	-- VIỀN RGB
 	local stroke = Instance.new("UIStroke", notif)
 	stroke.Thickness = 1.5
 	
 	task.spawn(function()
 		while notif.Parent do
 			for i=0,1,0.05 do
+				if not notif.Parent then break end
 				stroke.Color = Color3.fromHSV(i,1,1)
 				task.wait(0.03)
 			end
@@ -347,6 +361,7 @@ function createNotify(msg)
 	close.TextColor3 = Color3.fromRGB(200,200,200)
 	close.TextSize = 14
 
+	-- SHADOW
 	local shadow = Instance.new("Frame", notif)
 	shadow.Size = UDim2.new(1,6,1,6)
 	shadow.Position = UDim2.new(0,-3,0,-3)
@@ -355,26 +370,68 @@ function createNotify(msg)
 	shadow.ZIndex = 0
 	Instance.new("UICorner", shadow).CornerRadius = UDim.new(0,12)
 
+	-- Thêm vào danh sách
 	table.insert(notifications, notif)
 
-	-- XẾP CHỒNG TỪ DƯỚI LÊN
-	for i,v in pairs(notifications) do
-		v:TweenPosition(UDim2.new(1,-300,1,-80 - (i-1)*70),"Out","Quad",0.3,true)
+	-- SẮP XẾP LẠI (KHÔNG CHỒNG)
+	for i,v in ipairs(notifications) do
+		v:TweenPosition(
+			UDim2.new(1,-300,1,-80 - (i-1)*70),
+			"Out","Quad",0.3,true
+		)
 	end
 
-	notif:TweenPosition(UDim2.new(1,-300,1,-80),"Out","Quad",0.3,true)
+	-- HIỆU ỨNG CHUI VÀO
+	notif:TweenPosition(
+		UDim2.new(1,-300,1,-80 - (#notifications-1)*70),
+		"Out","Quad",0.3,true
+	)
 
 	-- CLOSE
 	close.MouseButton1Click:Connect(function()
+		for i,v in ipairs(notifications) do
+			if v == notif then
+				table.remove(notifications,i)
+				break
+			end
+		end
+
 		notif:Destroy()
+
+		-- Update lại vị trí sau khi xóa
+		for i,v in ipairs(notifications) do
+			v:TweenPosition(
+				UDim2.new(1,-300,1,-80 - (i-1)*70),
+				"Out","Quad",0.3,true
+			)
+		end
 	end)
 
 	-- AUTO HIDE
 	task.delay(4,function()
 		if notif.Parent then
-			notif:TweenPosition(UDim2.new(1,300,notif.Position.Y.Scale,notif.Position.Y.Offset),"In","Quad",0.3,true)
+			for i,v in ipairs(notifications) do
+				if v == notif then
+					table.remove(notifications,i)
+					break
+				end
+			end
+
+			notif:TweenPosition(
+				UDim2.new(1,300,notif.Position.Y.Scale,notif.Position.Y.Offset),
+				"In","Quad",0.3,true
+			)
+
 			task.wait(0.3)
-			notif:Destroy()
+			if notif then notif:Destroy() end
+
+			-- Update lại vị trí
+			for i,v in ipairs(notifications) do
+				v:TweenPosition(
+					UDim2.new(1,-300,1,-80 - (i-1)*70),
+					"Out","Quad",0.3,true
+				)
+			end
 		end
 	end)
 end
