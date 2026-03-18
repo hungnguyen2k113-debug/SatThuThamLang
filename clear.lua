@@ -164,6 +164,11 @@ local avatarBox = Instance.new("Frame", infoPage)
 avatarBox.Size = UDim2.new(0.4,0,1,0)
 avatarBox.BackgroundTransparency = 1
 
+local splitLine = Instance.new("Frame", infoPage)
+splitLine.Size = UDim2.new(0,2,1,0)
+splitLine.Position = UDim2.new(0.4,0,0,0) -- đúng vị trí 2/5
+splitLine.BackgroundColor3 = Color3.fromRGB(150,150,150)
+
 local avatarImg = Instance.new("ImageLabel", avatarBox)
 avatarImg.Size = UDim2.new(0.8,0,0.5,0)
 avatarImg.Position = UDim2.new(0.1,0,0.1,0)
