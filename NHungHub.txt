@@ -9,47 +9,57 @@ logo.Size = UDim2.new(0,60,0,60)
 logo.Position = UDim2.new(0,20,0,200)
 
 logo.Text = "🐿️"
-logo.TextScaled = true
+logo.TextScaled = false
+logo.TextSize = 30 -- nhỏ ~2/3 ban đầu
 logo.Font = Enum.Font.GothamBold
 
-logo.BackgroundColor3 = Color3.fromRGB(40,40,40)
+-- NỀN TRẮNG MỜ BAN ĐẦU
+logo.BackgroundColor3 = Color3.fromRGB(255,255,255)
+logo.BackgroundTransparency = 0.4
+
 logo.AutoButtonColor = false
 
 -- BO TRÒN
 local corner = Instance.new("UICorner", logo)
 corner.CornerRadius = UDim.new(1,0)
 
--- TRẠNG THÁI
+--------------------------------------------------
+-- ZOOM (CHỈ EMOJI + ĐỔI NỀN)
+--------------------------------------------------
 local zoomed = false
 
--- SCALE TEXT (zoom bên trong)
-logo.TextSize = 30 -- ~2/3 ban đầu
-
--- CLICK → ZOOM
 logo.MouseButton1Click:Connect(function()
 	zoomed = not zoomed
 	
 	if zoomed then
-		-- ZOOM TO (chỉ emoji)
-		logo:TweenSize(logo.Size, "Out", "Quad", 0.2, true)
+		-- emoji to lên
 		logo.TextSize = 50
+		
+		-- nền trắng đục
+		logo.BackgroundTransparency = 0
+		
 	else
-		-- THU NHỎ
+		-- emoji nhỏ lại
 		logo.TextSize = 30
+		
+		-- nền trắng mờ
+		logo.BackgroundTransparency = 0.4
 	end
 end)
 
 --------------------------------------------------
--- DRAG MƯỢT (GIỮ KÉO)
+-- DRAG MƯỢT (FIX KHÔNG KÉO ĐƯỢC)
 --------------------------------------------------
 local UIS = game:GetService("UserInputService")
 
 local dragging = false
-local dragStart
-local startPos
+local dragStart = nil
+local startPos = nil
 
 logo.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+	if input.UserInputType == Enum.UserInputType.MouseButton1 
+	or input.UserInputType == Enum.UserInputType.Touch then
+		
 		dragging = true
 		dragStart = input.Position
 		startPos = logo.Position
@@ -57,13 +67,18 @@ logo.InputBegan:Connect(function(input)
 end)
 
 logo.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+	if input.UserInputType == Enum.UserInputType.MouseButton1 
+	or input.UserInputType == Enum.UserInputType.Touch then
+		
 		dragging = false
 	end
 end)
 
 UIS.InputChanged:Connect(function(input)
-	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+	if dragging and (
+		input.UserInputType == Enum.UserInputType.MouseMovement 
+		or input.UserInputType == Enum.UserInputType.Touch) then
+		
 		local delta = input.Position - dragStart
 		
 		logo.Position = UDim2.new(
