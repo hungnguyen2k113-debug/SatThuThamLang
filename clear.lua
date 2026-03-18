@@ -342,7 +342,7 @@ function createNotify(msg)
 	local close = Instance.new("TextButton", notif)
 	close.Size = UDim2.new(0,25,0,25)
 	close.Position = UDim2.new(1,-30,0,5)
-	close.Text = "X"
+	close.Text = "❌"
 	close.BackgroundTransparency = 1
 	close.TextColor3 = Color3.fromRGB(200,200,200)
 	close.TextSize = 14
@@ -443,7 +443,6 @@ end)
 
 task.spawn(function()
 	task.wait(1)
-	createNotify("👋 Xin chào "..LocalPlayer.Name)
-	createNotify("Cảm ơn bạn đã dùng script ❤️")
+	createNotify("Cảm ơn bạn đã dùng script ❤️ 🤗 Xin chào"..LocalPlayer.Name)
 	createNotify("Tiktok: @nghbt255 | Zalo: 0394310186")
 end)
