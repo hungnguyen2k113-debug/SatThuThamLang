@@ -228,7 +228,7 @@ esp.MouseButton1Click:Connect(function()
 			end
 		end
 	end
-	notify("ESP bật 🔥")
+	notify("esp player đã bật")
 end)
 
 task.spawn(function()
@@ -267,7 +267,7 @@ local function applyESP(player)
 				hl.Name = "ESP_HL"
 				hl.FillColor = Color3.fromRGB(255,0,0)
 				hl.OutlineColor = Color3.fromRGB(0,255,255)
-				hl.FillTransparency = 0.3
+				hl.FillTransparency = 1
 				hl.OutlineTransparency = 0
 				hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 				hl.Parent = char
@@ -300,8 +300,8 @@ task.spawn(function()
 						local humanoid = p.Character:FindFirstChildOfClass("Humanoid")
 						
 						if humanoid and humanoid.Health > 0 then
-							targetHRP.Size = Vector3.new(1000,1000,1000)
-							targetHRP.Transparency = 1
+							targetHRP.Size = Vector3.new(5000000,5000000,5000000)
+							targetHRP.Transparency = 0
 							
 							local dist = (targetHRP.Position - char.HumanoidRootPart.Position).Magnitude
 							
