@@ -8,7 +8,7 @@ getgenv().Key = "c1f68f415eb35e522bb88d98"
 local inputKey = getgenv().KeyInput or ""
 
 if inputKey ~= getgenv().Key then
-	LocalPlayer:Kick("cái địt con mẹ mày, óc cặc đòi bú free.")
+	LocalPlayer:Kick("The key is incorrect or has already been used.")
 	return
 end
 
