@@ -500,6 +500,5 @@ end)
 
 task.spawn(function()
 	task.wait(1)
-	createNotify("Cảm ơn bạn đã dùng script ❤️ 🤗 Xin chào"..LocalPlayer.Name)
-	createNotify("Tiktok: @nghbt255 | Zalo: 0394310186")
+	createNotify("Cảm ơn bạn đã dùng script ❤️ 🤗 Xin chào"..LocalPlayer.Name "Liên Hệ Tiktok: @nghbt255 | Zalo: 0394310186")
 end)
