@@ -198,28 +198,42 @@ infoLabel.Text =
 
 -- ====== FIX TOGGLE SANG FARM PAGE ======
 local function createToggle(name, posY)
-	local holder = Instance.new("Frame", farmPage) -- 🔥 CHUYỂN SANG FARM
-	holder.Size = UDim2.new(1,0,0,40)
-	holder.Position = UDim2.new(0,0,posY,0)
-	holder.BackgroundTransparency = 1
+	local holder = Instance.new("Frame", farmPage)
+	holder.Size = UDim2.new(1,-20,0,50)
+	holder.Position = UDim2.new(0,10,posY,0)
+	holder.BackgroundColor3 = Color3.fromRGB(50,50,50)
+	Instance.new("UICorner", holder).CornerRadius = UDim.new(0,10)
 
+	-- ICON (fake)
+	local icon = Instance.new("TextLabel", holder)
+	icon.Size = UDim2.new(0,40,1,0)
+	icon.BackgroundTransparency = 1
+	icon.Text = "⚙️"
+	icon.TextScaled = true
+
+	-- TEXT
 	local label = Instance.new("TextLabel", holder)
-	label.Size = UDim2.new(0.6,0,1,0)
+	label.Size = UDim2.new(1,-110,1,0)
+	label.Position = UDim2.new(0,45,0,0)
 	label.BackgroundTransparency = 1
 	label.Text = name
 	label.TextScaled = true
+	label.TextXAlignment = Enum.TextXAlignment.Left
 	label.TextColor3 = Color3.new(1,1,1)
 
+	-- TOGGLE
 	local toggle = Instance.new("TextButton", holder)
-	toggle.Size = UDim2.new(0,50,0,22)
-	toggle.Position = UDim2.new(1,-60,0.5,-11)
-	toggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
+	toggle.Size = UDim2.new(0,60,0,26)
+	toggle.Position = UDim2.new(1,-70,0.5,-13)
+	toggle.BackgroundColor3 = Color3.fromRGB(90,90,90)
 	toggle.Text = ""
+	Instance.new("UICorner", toggle).CornerRadius = UDim.new(1,0)
 
 	local circle = Instance.new("Frame", toggle)
-	circle.Size = UDim2.new(0,22,0,22)
+	circle.Size = UDim2.new(0,26,0,26)
+	circle.Position = UDim2.new(0,0,0,0)
 	circle.BackgroundColor3 = Color3.fromRGB(255,255,255)
-	Instance.new("UICorner", circle)
+	Instance.new("UICorner", circle).CornerRadius = UDim.new(1,0)
 
 	local state = false
 
@@ -227,18 +241,18 @@ local function createToggle(name, posY)
 		state = not state
 		
 		if state then
-			toggle.BackgroundColor3 = Color3.fromRGB(0,255,0)
-			circle.Position = UDim2.new(1,-22,0,0)
+			toggle.BackgroundColor3 = Color3.fromRGB(0,200,100)
+			circle:TweenPosition(UDim2.new(1,-26,0,0),"Out","Quad",0.2,true)
 		else
-			toggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
-			circle.Position = UDim2.new(0,0,0,0)
+			toggle.BackgroundColor3 = Color3.fromRGB(90,90,90)
+			circle:TweenPosition(UDim2.new(0,0,0,0),"Out","Quad",0.2,true)
 		end
 	end)
 end
 
-createToggle("Bật thông báo Script",0.1)
-createToggle("Bug Hitbox Player",0.3)
-createToggle("Esp Player",0.5)
+createToggle("Bật thông báo Script",0)
+createToggle("Bug Hitbox Player",0.2)
+createToggle("ESP Player",0.4)
 
 -- ====== CHUYỂN TAB ======
 infoBtn.MouseButton1Click:Connect(function()
