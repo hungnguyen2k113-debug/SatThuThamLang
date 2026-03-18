@@ -188,11 +188,11 @@ infoLabel.TextXAlignment = Enum.TextXAlignment.Left
 infoLabel.TextYAlignment = Enum.TextYAlignment.Top
 
 infoLabel.Text =
-"👤 USER INFO\n"..
-"Name: "..LocalPlayer.Name..
-"\nUID: "..LocalPlayer.UserId..
+"👤 Thông tin player\n"..
+"\nTên: "..LocalPlayer.Name..
+"\nuid: "..LocalPlayer.UserId..
 "\nRegion: Asia/HoChiMinh\n\n"..
-"📱 CONTACT\n"..
+"📱 Liên Hệ\n"..
 "TikTok: @nghbt255\n"..
 "Zalo: 0394310186"
 
@@ -236,9 +236,9 @@ local function createToggle(name, posY)
 	end)
 end
 
-createToggle("Bật thông báo",0.1)
-createToggle("Kill Aura",0.3)
-createToggle("Auto Farm",0.5)
+createToggle("Bật thông báo Script",0.1)
+createToggle("Bug Hitbox Player",0.3)
+createToggle("Esp Player",0.5)
 
 -- ====== CHUYỂN TAB ======
 infoBtn.MouseButton1Click:Connect(function()
@@ -325,23 +325,36 @@ exitBtn.MouseButton1Click:Connect(function()
 	local confirm = Instance.new("Frame", gui)
 	confirm.Size = UDim2.new(0,300,0,150)
 	confirm.Position = UDim2.new(0.5,-150,0.5,-75)
-	confirm.BackgroundColor3 = Color3.fromRGB(80,80,80)
+-- nền confirm đẹp hơn
+confirm.BackgroundColor3 = Color3.fromRGB(45,45,45)
+Instance.new("UICorner", confirm).CornerRadius = UDim.new(0,12)
 
-	local txt = Instance.new("TextLabel", confirm)
-	txt.Size = UDim2.new(1,0,0.6,0)
-	txt.Text = "Script đang hoạt động, bạn muốn tắt hả=(?"
-	txt.TextScaled = true
-	txt.BackgroundTransparency = 1
+-- TEXT
+local txt = Instance.new("TextLabel", confirm)
+txt.Size = UDim2.new(1,-20,0.5,0)
+txt.Position = UDim2.new(0,10,0,10)
+txt.Text = "Script đang chạy\nBạn có chắc muốn tắt không?"
+txt.TextScaled = true
+txt.TextColor3 = Color3.new(1,1,1)
+txt.BackgroundTransparency = 1
+txt.TextWrapped = true
 
-	local yes = Instance.new("TextButton", confirm)
-	yes.Size = UDim2.new(0.5,0,0.4,0)
-	yes.Position = UDim2.new(0,0,0.6,0)
-	yes.Text = "Yes"
+-- YES BUTTON (đỏ)
+local yes = Instance.new("TextButton", confirm)
+yes.Size = UDim2.new(0.45,0,0,40)
+yes.Position = UDim2.new(0.05,0,1,-50)
+yes.Text = "Yes"
+yes.TextColor3 = Color3.new(1,1,1)
+yes.BackgroundColor3 = Color3.fromRGB(200,60,60)
+Instance.new("UICorner", yes).CornerRadius = UDim.new(0,8)
 
-	local no = Instance.new("TextButton", confirm)
-	no.Size = UDim2.new(0.5,0,0.4,0)
-	no.Position = UDim2.new(0.5,0,0.6,0)
-	no.Text = "No"
+local no = Instance.new("TextButton", confirm)
+no.Size = UDim2.new(0.45,0,0,40)
+no.Position = UDim2.new(0.5,0,1,-50)
+no.Text = "No"
+no.TextColor3 = Color3.new(1,1,1)
+no.BackgroundColor3 = Color3.fromRGB(80,80,80)
+Instance.new("UICorner", no).CornerRadius = UDim.new(0,8)
 
 	yes.MouseButton1Click:Connect(function()
 		gui:Destroy()
