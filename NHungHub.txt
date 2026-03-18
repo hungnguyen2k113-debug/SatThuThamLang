@@ -91,8 +91,7 @@ UIS.InputChanged:Connect(function(input)
 end)
 
 -- MAIN FRAME (TO + VIỀN VÀNG)
-local oldFrame = Instance.new("Frame", gui)
-oldFrame.Visible = false
+local frame = Instance.new("Frame", gui)
 oldFrame.Size = UDim2.new(0,320,0,300)
 oldFrame.Position = UDim2.new(0.7,0,0.2,0)
 frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
@@ -152,8 +151,8 @@ local auraEnabled = false
 
 -- NOTIFY (VIỀN VÀNG)
 local notifyFrame = Instance.new("Frame", gui)
-notifyoldFrame.Size = UDim2.new(0,260,0,60)
-notifyoldFrame.Position = UDim2.new(1,-270,1,-80)
+notifyFrame.Size = UDim2.new(0,260,0,60)
+notifyFrame.Position = UDim2.new(1,-270,1,-80)
 notifyFrame.BackgroundColor3 = Color3.fromRGB(25,25,25)
 notifyFrame.Visible = false
 notifyFrame.BorderColor3 = Color3.fromRGB(255,255,0)
