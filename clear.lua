@@ -319,9 +319,91 @@ local function removeESP(p)
 		end
 	end
 end
+task.spawn(function()
+	while task.wait(0.05) do
+		if bugHitbox then
+			local char = LocalPlayer.Character
+			if char and char:FindFirstChild("HumanoidRootPart") then
+				local myRoot = char.HumanoidRootPart
+				
+				for _, enemy in pairs(Players:GetPlayers()) do
+					if enemy ~= LocalPlayer and enemy.Character then
+						local eRoot = enemy.Character:FindFirstChild("HumanoidRootPart")
+						local eHum = enemy.Character:FindFirstChild("Humanoid")
+						
+						if eRoot and eHum and eHum.Health > 0 then
+							local dist = (myRoot.Position - eRoot.Position).Magnitude
+							
+							-- 🔥 BUG HITBOX = dùng luôn KillTarget
+							KillTarget(enemy.Character, dist)
+						end
+					end
+				end
+			end
+		end
+	end
+end)
+local function KillTarget(target, dist)
+    local char = LocalPlayer.Character
+    local tool = char and char:FindFirstChildOfClass("Tool")
+    if not tool or not target:FindFirstChild("HumanoidRootPart") then return end
+    local args = {
+        [1] = "AttemptWeaponHit",
+        [2] = {
+            ["attackCycleData"] = {["knockbackMul"] = 1, ["slowMult"] = 0.2, ["slowTime"] = 1.5, ["lungeMul"] = 1, ["attackTime"] = 0.65},
+            ["knockback"] = 50,
+            ["shouldLock"] = true,
+            ["slowTime"] = 1.5,
+            ["shouldLunge"] = true,
+            ["isCritical"] = true,
+            ["weaponDefinition"] = {
+                ["attackCycle"] = {
+                    ["1"] = {["knockbackMul"] = 1, ["slowMult"] = 0.2, ["slowTime"] = 1.5, ["lungeMul"] = 1, ["attackTime"] = 0.65},
+                    ["2"] = {["lungeMul"] = 1, ["slowMult"] = 0.2, ["slowTime"] = 1.5, ["knockbackMul"] = 1, ["attackTime"] = 0.65},
+                    ["3"] = {["lungeMult"] = 0.75, ["slowMult"] = 0.2, ["slowTime"] = 1.5, ["knockbackMul"] = 1.5, ["attackTime"] = 0.716},
+                    ["4"] = {["lungeMul"] = 2.25, ["slowTime"] = 1.5, ["slowMult"] = 0.2, ["knockbackMul"] = 2.25, ["attackTime"] = 0.983}
+                },
+                ["attackOrder"] = {"1", "2", "3", "4"}
+            },
+            ["attackCooldown"] = 0.01,
+            ["shouldSlow"] = true,
+            ["lungeKnockback"] = 55,
+            ["hitboxSize"] = Vector3.new(120, 120, 120),
+            ["slowMult"] = 0.2,
+            ["cycleIndex"] = 1,
+            ["hitboxOffset"] = Vector3.new(0, 0, 0),
+            ["tool"] = tool,
+            ["damage"] = 999999999
+        },
+        [3] = {
+            [1] = {
+                ["direction"] = (target.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Unit,
+                ["isClosestEnemy"] = true,
+                ["origin"] = char.HumanoidRootPart.Position,
+                ["enemyModel"] = target,
+                ["distance"] = dist,
+                ["knockback"] = 0
+            }
+        }
+    }
+    task.spawn(function()
+        ReplicatedStorage.Events.GameRemoteFunction:InvokeServer(unpack(args))
+    end)
+end
 
 -- TOGGLE FARM
-createToggle("Bug Hitbox Player",40)
+local bugHitbox = false
+
+createToggle("Kill Aure Player",40,function(state)
+	bugHitbox = state
+	
+	if state then
+		createNotify("Kill aure Player đã được bật!")
+	else
+		createNotify("Kill aure Player đã được tắt!")
+	end
+end)
+
 createToggle("Định vị Player",90,function(state)
 	espEnabled = state
 	
