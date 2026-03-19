@@ -264,7 +264,23 @@ end
 
 -- TOGGLE FARM
 createToggle("Bug Hitbox Player",40)
-createToggle("ESP Player",90)
+createToggle("Định vị Player",90,function(state)
+	espEnabled = state
+	
+	if state then
+		for _,p in pairs(Players:GetPlayers()) do
+			addESP(p)
+		end
+		
+		createNotify("Định vị người chơi đã được bật!")
+	else
+		for _,p in pairs(Players:GetPlayers()) do
+			removeESP(p)
+		end
+		
+		createNotify("Định vị người chơi đã được tắt!")
+	end
+end)
 
 -- ===== TITLE THÔNG BÁO =====
 local espEnabled = false
@@ -323,6 +339,15 @@ local function removeESP(p)
 		end
 	end
 end
+
+Players.PlayerAdded:Connect(function(p)
+	p.CharacterAdded:Connect(function()
+		task.wait(1)
+		if espEnabled then
+			addESP(p)
+		end
+	end)
+end)
 
 local notifyTitle = Instance.new("TextLabel", farmPage)
 notifyTitle.Size = UDim2.new(1,-20,0,30)
