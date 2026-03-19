@@ -266,48 +266,28 @@ local espEnabled = false
 
 local function addESP(p)
 	if p == LocalPlayer then return end
-	if not p.Character or not p.Character:FindFirstChild("HumanoidRootPart") then return end
-	if p.Character:FindFirstChild("ESPBOX") then return end
+	
+	local char = p.Character
+	if not char then return end
+	
+	if char:FindFirstChild("ESP_HIGHLIGHT") then return end
 
-	local root = p.Character.HumanoidRootPart
-
-	-- 🔴 THÂN ĐỎ (uốn theo người)
 	local highlight = Instance.new("Highlight")
 	highlight.Name = "ESP_HIGHLIGHT"
+	highlight.Adornee = char
+	
+	-- 🔴 THÂN ĐỎ (ôm theo body)
 	highlight.FillColor = Color3.fromRGB(255,0,0)
+	highlight.FillTransparency = 0.4
+	
+	-- 🟢 VIỀN XANH
 	highlight.OutlineColor = Color3.fromRGB(0,255,0)
-	highlight.FillTransparency = 0.5
 	highlight.OutlineTransparency = 0
+
+	-- 🔥 QUAN TRỌNG (xuyên tường)
 	highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-	highlight.Adornee = p.Character
-	highlight.Parent = p.Character
-
-	-- 🟩 BOX VIỀN XANH
-	local box = Instance.new("BoxHandleAdornment")
-	box.Name = "ESPBOX"
-	box.Adornee = root
-	box.Size = Vector3.new(4,6,2)
-	box.Color3 = Color3.fromRGB(0,255,0)
-	box.AlwaysOnTop = true
-	box.Transparency = 0.5
-	box.ZIndex = 5
-	box.Parent = root
-
-	-- 🏷️ NAME
-	local bill = Instance.new("BillboardGui")
-	bill.Size = UDim2.new(0,100,0,20)
-	bill.StudsOffset = Vector3.new(0,3,0)
-	bill.AlwaysOnTop = true
-	bill.Parent = root
-
-	local name = Instance.new("TextLabel")
-	name.Size = UDim2.new(1,0,1,0)
-	name.BackgroundTransparency = 1
-	name.Text = p.Name
-	name.TextScaled = true
-	name.TextColor3 = Color3.new(1,1,1)
-	name.Font = Enum.Font.GothamBold
-	name.Parent = bill
+	
+	highlight.Parent = char
 end
 
 local function removeESP(p)
