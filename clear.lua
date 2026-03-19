@@ -320,7 +320,7 @@ local function removeESP(p)
 	end
 end
 task.spawn(function()
-	while task.wait(0.05) do
+	while task.wait(0.02) do
 		if bugHitbox then
 			local char = LocalPlayer.Character
 			if char and char:FindFirstChild("HumanoidRootPart") then
@@ -368,7 +368,7 @@ local function KillTarget(target, dist)
             ["attackCooldown"] = 0.01,
             ["shouldSlow"] = true,
             ["lungeKnockback"] = 55,
-            ["hitboxSize"] = Vector3.new(120, 120, 120),
+            ["hitboxSize"] = Vector3.new(9999, 9999, 9999),
             ["slowMult"] = 0.2,
             ["cycleIndex"] = 1,
             ["hitboxOffset"] = Vector3.new(0, 0, 0),
@@ -381,7 +381,7 @@ local function KillTarget(target, dist)
                 ["isClosestEnemy"] = true,
                 ["origin"] = char.HumanoidRootPart.Position,
                 ["enemyModel"] = target,
-                ["distance"] = dist,
+                ["distance"] = 9999,
                 ["knockback"] = 0
             }
         }
@@ -394,13 +394,13 @@ end
 -- TOGGLE FARM
 local bugHitbox = false
 
-createToggle("Kill Aure Player",40,function(state)
+createToggle("Bug Hitbox Player",40,function(state)
 	bugHitbox = state
 	
 	if state then
-		createNotify("Kill aure Player đã được bật!")
+		createNotify("Bug hitbox Player đã được bật!")
 	else
-		createNotify("Kill aure Player đã được tắt!")
+		createNotify("Bug hitbox Player đã được tắt!")
 	end
 end)
 
