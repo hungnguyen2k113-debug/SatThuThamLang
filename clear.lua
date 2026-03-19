@@ -262,27 +262,6 @@ local function createToggle(name, posY, callback)
 	end)
 end
 
--- TOGGLE FARM
-createToggle("Bug Hitbox Player",40)
-createToggle("Định vị Player",90,function(state)
-	espEnabled = state
-	
-	if state then
-		for _,p in pairs(Players:GetPlayers()) do
-			addESP(p)
-		end
-		
-		createNotify("Định vị người chơi đã được bật!")
-	else
-		for _,p in pairs(Players:GetPlayers()) do
-			removeESP(p)
-		end
-		
-		createNotify("Định vị người chơi đã được tắt!")
-	end
-end)
-
--- ===== TITLE THÔNG BÁO =====
 local espEnabled = false
 
 local function addESP(p)
@@ -299,6 +278,7 @@ local function addESP(p)
 	highlight.OutlineColor = Color3.fromRGB(0,255,0)
 	highlight.FillTransparency = 0.5
 	highlight.OutlineTransparency = 0
+	highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 	highlight.Adornee = p.Character
 	highlight.Parent = p.Character
 
@@ -339,6 +319,29 @@ local function removeESP(p)
 		end
 	end
 end
+
+-- TOGGLE FARM
+createToggle("Bug Hitbox Player",40)
+createToggle("Định vị Player",90,function(state)
+	espEnabled = state
+	
+	if state then
+		for _,p in pairs(Players:GetPlayers()) do
+			addESP(p)
+		end
+		
+		createNotify("Định vị người chơi đã được bật!")
+	else
+		for _,p in pairs(Players:GetPlayers()) do
+			removeESP(p)
+		end
+		
+		createNotify("Định vị người chơi đã được tắt!")
+	end
+end)
+
+-- ===== TITLE THÔNG BÁO =====
+
 
 Players.PlayerAdded:Connect(function(p)
 	p.CharacterAdded:Connect(function()
@@ -587,3 +590,11 @@ task.spawn(function()
 	task.wait(1)
 	createNotify("🤗 Xin chào"..LocalPlayer.Name)
 end)
+for _,p in pairs(Players:GetPlayers()) do
+	p.CharacterAdded:Connect(function()
+		task.wait(1)
+		if espEnabled then
+			addESP(p)
+		end
+	end)
+end
