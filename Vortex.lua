@@ -7,7 +7,7 @@ local LocalPlayer = Players.LocalPlayer
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-    Name = "⚡ Vortex Hub | SILENT ASSASSIN",
+    Name = "Vortex Hub - Sát thủ thầm lặng [Premium]",
     LoadingTitle = "Đang tải Vortex Hub",
     LoadingSubtitle = "by NgHung",
     ConfigurationSaving = {
@@ -122,8 +122,8 @@ InfoTab:CreateLabel("Made with by NgHung")
 InfoTab:CreateButton({
     Name = "Tham gia Discord Server",
     Callback = function()
-        setclipboard("https://discord.gg/usv255Pw4t")
-        Rayfield:Notify({Title = "Đã Copy!", Content = "Link Discord đã được chép vào bộ nhớ tạm!", Duration = 3})
+        setclipboard("Link Discord Server Nốt Found!")
+        Rayfield:Notify({Title = "Xảy ra lỗi!", Content = "Link Discord hiện tại chưa được cập nhật!", Duration = 3})
     end
 })
 
