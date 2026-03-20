@@ -5,6 +5,7 @@ local LocalPlayer = Players.LocalPlayer
 
 local KEYS = {
     ["Vortex_22ab49Bwks3819Bk9ak"] = nil,
+    ["Vortex_51fownB39Al381Jsjc38"] = nil,
     ["Vortex_582a19ajcnw9Bk52wna"] = nil
 }
 
